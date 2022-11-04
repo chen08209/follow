@@ -1,0 +1,10 @@
+@use 'sass:map';
+@use '../mixins/function.scss' as *;
+
+$popper: () !default;
+$popper: map.merge(
+  (
+    'border-radius': var(#{getCssVarName('popover-border-radius')}, 4px),
+  ),
+  $popper
+);

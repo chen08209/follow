@@ -1,0 +1,5 @@
+{
+  "name": "@follow-ui/tokens",
+  "private": true,
+  "main": "index.ts"
+}

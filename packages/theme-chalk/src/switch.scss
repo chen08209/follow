@@ -1,0 +1,223 @@
+@use 'sass:map';
+
+@use 'mixins/mixins' as *;
+@use 'mixins/setVar' as *;
+@use 'mixins/function' as *;
+@use 'mixins/config' as *;
+@use 'map' as *;
+
+@include b(switch) {
+  @include set-component-css-var('switch', $switch);
+  @include set-component-css-var('switch-ripple', $ripple);
+}
+
+@include b(switch) {
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  font-size: map.get($switch-font-size, 'default');
+  line-height: map.get($switch-core-height, 'default');
+  height: map.get($switch-height, 'default');
+  vertical-align: middle;
+  padding: map.get($switch-padding, 'default');
+  @include when(disabled) {
+    & .#{$namespace}-switch__core,
+    & .#{$namespace}-switch__label {
+      cursor: not-allowed;
+    }
+  }
+
+  @include e(label) {
+    transition: getCssVar('transition-duration-fast');
+    height: map.get($switch-core-height, 'default');
+    display: inline-block;
+    font-size: map.get($switch-font-size, 'default');
+    font-weight: 500;
+    cursor: pointer;
+    vertical-align: middle;
+    color: getCssVar('text-color', 'primary');
+
+    @include when(active) {
+      color: getCssVar('color-primary');
+    }
+
+    @include m(left) {
+      margin-right: 10px;
+    }
+
+    @include m(right) {
+      margin-left: 10px;
+    }
+
+    & * {
+      line-height: 1;
+      font-size: map.get($switch-font-size, 'default');
+      display: inline-block;
+    }
+
+    .#{$namespace}-icon {
+      height: inherit;
+
+      svg {
+        vertical-align: middle;
+      }
+    }
+  }
+
+  @include e(input) {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    margin: 0;
+
+    &:focus-visible {
+      & ~ .#{$namespace}-switch__core {
+        outline: 2px solid getCssVar('switch-on-color');
+        outline-offset: 1px;
+      }
+    }
+  }
+
+  @include e(inner) {
+    margin: 0;
+    display: inline-block;
+    position: relative;
+    width: map.get($switch-core-width, 'default');
+    height: map.get($switch-core-height, 'default');
+    border-radius: map.get($switch-core-border-radius, 'default');
+    background: getCssVar('switch-off-color');
+    outline: none;
+    vertical-align: middle;
+    transition: border-color getCssVar('transition-duration'),
+      background-color getCssVar('transition-duration');
+  }
+
+  @include e(core) {
+    position: absolute;
+    height: map.get($switch-height, 'default');
+    width: map.get($switch-height, 'default');
+    left: 0;
+    pointer-events: none;
+    transition: all getCssVar('transition-duration');
+    @include e(warpper) {
+      height: 100%;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+    }
+
+    .#{$namespace}-ripple-wrapper {
+      border-radius: 50%;
+      .#{$namespace}-ripple {
+        background-color: getCssVar('switch-ripple-bg-color-9');
+      }
+    }
+
+    @include e(action) {
+      position: absolute;
+      border-radius: getCssVar('border-radius-circle');
+      width: map.get($switch-button-size, 'default');
+      height: map.get($switch-button-size, 'default');
+      background-color: getCssVar('color-white');
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: getCssVar('switch-off-color');
+
+      .is-icon,
+      .is-text {
+        transition: opacity getCssVar('transition-duration');
+        position: absolute;
+        user-select: none;
+      }
+    }
+
+    .is-text {
+      font-size: 12px;
+    }
+
+    .is-show {
+      opacity: 1;
+    }
+
+    .is-hide {
+      opacity: 0;
+    }
+  }
+
+  @include when(checked) {
+    @include e(inner) {
+      border-color: var(
+        #{getCssVarName('switch-border-color')},
+        #{getCssVar('switch-on-color')}
+      );
+      background-color: getCssVar('switch-on-color');
+    }
+    @include e(core) {
+      left: 100%;
+      transform: translateX(-100%);
+    }
+  }
+
+  @include when(disabled) {
+    opacity: 0.6;
+  }
+
+  @include m(wide) {
+    .#{$namespace}-switch__label {
+      &.#{$namespace}-switch__label--left {
+        span {
+          left: 10px;
+        }
+      }
+
+      &.#{$namespace}-switch__label--right {
+        span {
+          right: 10px;
+        }
+      }
+    }
+  }
+
+  & .label-fade-enter-from,
+  & .label-fade-leave-active {
+    opacity: 0;
+  }
+
+  @each $size in (large, small) {
+    @include m($size) {
+      font-size: map.get($switch-font-size, $size);
+      line-height: map.get($switch-core-height, $size);
+      height: map.get($switch-height, $size);
+      padding: map.get($switch-padding, $size);
+
+      @include e(label) {
+        height: map.get($switch-core-height, $size);
+        font-size: map.get($switch-font-size, $size);
+
+        & * {
+          font-size: map.get($switch-font-size, $size);
+        }
+      }
+
+      @include e(inner) {
+        width: map.get($switch-core-width, $size);
+        height: map.get($switch-core-height, $size);
+        border-radius: map.get($switch-core-border-radius, $size);
+      }
+
+      @include e(core) {
+        height: map.get($switch-height, $size);
+        width: map.get($switch-height, $size);
+
+        .#{$namespace}-switch__action {
+          width: map.get($switch-button-size, $size);
+          height: map.get($switch-button-size, $size);
+        }
+      }
+    }
+  }
+}

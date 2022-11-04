@@ -1,0 +1,20 @@
+{
+  "name": "play",
+  "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite"
+  },
+  "dependencies": {
+    "follow-ui": "^0.0.15",
+    "vue": "^3.2.0"
+  },
+  "devDependencies": {
+    "unplugin-vue-components": "^0.22.7",
+    "vite": "^3.1.3"
+  }
+}

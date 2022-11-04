@@ -1,0 +1,5 @@
+{
+  "name": "@follow-ui/locale",
+  "private": true,
+  "main": "index.ts"
+}

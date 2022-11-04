@@ -1,0 +1,5 @@
+{
+  "name": "@follow-ui/hooks",
+  "private": true,
+  "main": "index.ts"
+}

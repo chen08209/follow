@@ -1,0 +1,63 @@
+@use 'sass:map';
+@use '../mixins/function.scss' as *;
+@import 'base';
+
+$radio: () !default;
+$radio: map.merge(
+  (
+    'border': getCssVar('border'),
+    'hover-border-color': getCssVar('color-primary'),
+    'hover-text-color': getCssVar('color-primary'),
+    'checked-bg-color': getCssVar('color-primary', 'light-7'),
+    'checked-text-color': getCssVar('color-primary'),
+    'checked-border-color': getCssVar('color-primary', 'light-5'),
+    'disabled-checked-fill': getCssVar('border-color-extra-light'),
+  ),
+  $radio
+);
+
+$radio-button: () !default;
+$radio-button: map.merge(
+  (
+    'hover-border-color': getCssVar('color-primary'),
+    'hover-text-color': getCssVar('color-primary'),
+    'checked-bg-color': getCssVar('color-primary', 'light-9'),
+    'checked-text-color': getCssVar('color-primary'),
+    'checked-border-color': getCssVar('color-primary', 'light-5'),
+    'disabled-checked-fill': getCssVar('border-color-extra-light'),
+  ),
+  $radio-button
+);
+
+$radio-size: () !default;
+$radio-size: map.merge($common-component-size, $radio-size);
+
+$radio-disabled: () !default;
+$radio-disabled: map.merge(
+  (
+    'text-color': getCssVar('text-color-placeholder'),
+    'border-color': getCssVar('disabled-border-color'),
+    'bg-color': getCssVar('disabled-bg-color'),
+  ),
+  $radio-disabled
+);
+
+$radio-bordered-input-height: () !default;
+$radio-bordered-input-height: map.merge(
+  (
+    'large': 14px,
+    'default': 12px,
+    'small': 12px,
+  ),
+  $radio-bordered-input-height
+);
+
+$radio-bordered-input-width: () !default;
+$radio-bordered-input-width: map.merge(
+  (
+    'large': 14px,
+    'default': 12px,
+    'small': 12px,
+  ),
+  $radio-bordered-input-width
+);

@@ -1,0 +1,32 @@
+import { buildProps, definePropType } from '@follow-ui/utils'
+import { disabledTimeListsProps } from '../shared'
+
+import type { ExtractPropTypes } from 'vue'
+import type { Dayjs } from 'dayjs'
+
+export const basicTimeSpinnerProps = buildProps({
+  role: {
+    type: String,
+    required: true,
+  },
+  spinnerDate: {
+    type: definePropType<Dayjs>(Object),
+    required: true,
+  },
+  showSeconds: {
+    type: Boolean,
+    default: true,
+  },
+  //是否使用箭头控制
+  arrowControl: Boolean,
+  amPmMode: {
+    // 'a': am/pm; 'A': AM/PM
+    type: definePropType<'a' | 'A' | ''>(String),
+    default: '',
+  },
+  ...disabledTimeListsProps,
+} as const)
+
+export type BasicTimeSpinnerProps = ExtractPropTypes<
+  typeof basicTimeSpinnerProps
+>

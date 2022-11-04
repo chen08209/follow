@@ -1,0 +1,27 @@
+/* https://github.com/antfu/prism-theme-vars */
+@use 'prism-theme-vars/base.css';
+@use 'prism-theme-vars/marker.css';
+
+:root {
+  --prism-builtin: var(--fl-color-primary);
+  --prism-comment: #848486;
+  --prism-deleted: #3182bd;
+  --prism-function: var(--fl-color-primary);
+  --prism-boolean: #c25205;
+  --prism-number: #c25205;
+  --prism-property: var(--fl-color-warning);
+  --prism-punctuation: var(--fl-color-info);
+  --prism-keyword: var(--fl-color-primary);
+  --prism-variable: #0b8235;
+  --prism-string: var(--fl-color-success);
+  --prism-url-decoration: #67cdcc;
+  --prism-symbol: green;
+  --prism-selector: var(--fl-color-success);
+}
+
+.code-container {
+  background: var(--fl-fill-color) !important;
+}
+code {
+  color: var(--text-color) !important;
+}

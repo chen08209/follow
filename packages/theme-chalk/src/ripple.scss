@@ -1,0 +1,49 @@
+@use 'mixins/mixins' as *;
+@use 'mixins/function' as *;
+@use 'map' as *;
+
+@include b(ripple-wrapper) {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  @include when(disabled) {
+    pointer-events: none;
+  }
+}
+
+@include b(ripple) {
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+  z-index: -1;
+  border-radius: 50%;
+  transform: scale(0);
+  opacity: 0;
+  background: $color-white;
+  @include when(enter) {
+    transform: scale(1);
+    opacity: 1;
+    animation: rippleEffect 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @include when(leave) {
+    opacity: 0;
+  }
+
+  @keyframes rippleEffect {
+    0% {
+      transform: scale(0);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+}

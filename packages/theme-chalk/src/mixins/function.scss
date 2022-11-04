@@ -1,0 +1,94 @@
+@use 'config' as config;
+
+//将选择器转化为string
+@function selectorToString($selector) {
+  //转化为sass
+  $selector: inspect($selector);
+  //去除括号(截取字符串,从第二个取到倒数第2个)
+  $selector: str-slice($selector, 2, -2);
+  @return $selector;
+}
+
+//判断是否包含$modifier-separator
+@function containsModifier($selector) {
+  $selector: selectorToString($selector);
+
+  @if str-index($selector, config.$modifier-separator) {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+//判断是否包含$state-prefix
+@function containWhenFlag($selector) {
+  $selector: selectorToString($selector);
+
+  @if str-index($selector, '.' + config.$state-prefix) {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+//判断是否伪类选择器
+@function containPseudoClass($selector) {
+  $selector: selectorToString($selector);
+
+  @if str-index($selector, ':') {
+    @return true;
+  } @else {
+    @return false;
+  }
+}
+
+//var调用css3变量,具体调用见joinVarName
+@function getCssVar($args...) {
+  @return var(#{joinVarName($args)});
+}
+
+// getCssVarWithDefault(('button', 'text-color'), red) => var(--el-button-text-color, red)
+@function getCssVarWithDefault($args, $default) {
+  @return var(#{joinVarName($args)}, #{$default});
+}
+
+//判断选择器是否包含下列三种规则之一
+@function hitAllSpecialNestRule($selector) {
+  @return containsModifier($selector) or containWhenFlag($selector) or
+    containPseudoClass($selector);
+}
+
+/**
+  遍历$list,用namespace装饰之后返回，如：
+  "font-size", "extra-large" => --fl-font-size-extra-large
+ */
+@function joinVarName($list) {
+  $name: '--' + config.$namespace;
+
+  @each $item in $list {
+    @if $item != '' {
+      $name: $name + '-' + $item;
+    }
+  }
+
+  @return $name;
+}
+
+//见joinVarName
+@function getCssVarName($args...) {
+  @return joinVarName($args);
+}
+
+@function bem($block, $element: '', $modifier: '') {
+  $name: config.$namespace + config.$common-separator + $block;
+
+  @if $element != '' {
+    $name: $name + config.$element-separator + $element;
+  }
+
+  @if $modifier != '' {
+    $name: $name + config.$modifier-separator + $modifier;
+  }
+
+  @return $name;
+}

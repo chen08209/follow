@@ -1,0 +1,14 @@
+@use 'sass:map';
+@use '../mixins/function.scss' as *;
+
+$ripple: () !default;
+$ripple: map.merge(
+  (
+    bg-color-1: getCssVar('color-primary'),
+    bg-color-3: getCssVar('color-primary', 'light-3'),
+    bg-color-5: getCssVar('color-primary', 'light-5'),
+    bg-color-7: getCssVar('color-primary', 'light-7'),
+    bg-color-9: getCssVar('color-primary', 'light-9'),
+  ),
+  $ripple
+);

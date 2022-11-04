@@ -1,0 +1,59 @@
+@use 'sass:map';
+@use '../mixins/function.scss' as *;
+
+$checkbox: () !default;
+$checkbox: map.merge(
+  (
+    'border': getCssVar('border'),
+    'border-radius': getCssVar('border-radius-small'),
+    'active-text-color': getCssVar('color-primary'),
+    'hover-border-color': getCssVar('color-primary'),
+    'checked-bg-color': getCssVar('color-primary', 'light-9'),
+    'checked-border-color': getCssVar('color-primary', 'light-5'),
+  ),
+  $checkbox
+);
+
+$checkbox-button: () !default;
+$checkbox-button: map.merge(
+  (
+    'active-text-color': getCssVar('color-primary'),
+    'hover-border-color': getCssVar('color-primary'),
+    'checked-bg-color': getCssVar('color-primary', 'light-9'),
+    'checked-border-color': getCssVar('color-primary', 'light-5'),
+  ),
+  $checkbox-button
+);
+
+$checkbox-disabled: () !default;
+$checkbox-disabled: map.merge(
+  (
+    'text-color': getCssVar('text-color-placeholder'),
+    'border-color': getCssVar('disabled-border-color'),
+    'bg-color': getCssVar('disabled-bg-color'),
+  ),
+  $checkbox-disabled
+);
+
+$checkbox-size: () !default;
+$checkbox-size: map.merge($common-component-size, $checkbox-size);
+
+$checkbox-bordered-padding-left: () !default;
+$checkbox-bordered-padding-left: map.merge(
+  (
+    'large': 12px,
+    'default': 10px,
+    'small': 8px,
+  ),
+  $checkbox-bordered-padding-left
+);
+
+$checkbox-bordered-padding-right: () !default;
+$checkbox-bordered-padding-right: map.merge(
+  (
+    'large': 20px,
+    'default': 16px,
+    'small': 12px,
+  ),
+  $checkbox-bordered-padding-right
+);

@@ -1,0 +1,150 @@
+@use 'config' as *;
+@use 'function' as *;
+
+@mixin b($block) {
+  $B: $namespace + '-' + $block !global;
+  .#{$B} {
+    @content;
+  }
+}
+
+//添加$modifier-separator修饰符
+@mixin m($modifier) {
+  $selector: &;
+  $currentSelector: '';
+  @each $unit in $modifier {
+    $currentSelector: #{$currentSelector +
+      $selector +
+      $modifier-separator +
+      $unit +
+      ','};
+  }
+  @at-root {
+    #{$currentSelector} {
+      @content;
+    }
+  }
+}
+
+//添加$element-separator修饰符
+@mixin e($element) {
+  $E: $element !global;
+  $selector: &;
+  $currentSelector: '';
+  @each $unit in $element {
+    $currentSelector: #{$currentSelector +
+      '.' +
+      $B +
+      $element-separator +
+      $unit +
+      ','};
+  }
+
+  @if hitAllSpecialNestRule($selector) {
+    @at-root {
+      #{$selector} {
+        #{$currentSelector} {
+          @content;
+        }
+      }
+    }
+  } @else {
+    @at-root {
+      #{$currentSelector} {
+        @content;
+      }
+    }
+  }
+}
+
+@mixin when($state) {
+  @at-root {
+    &.#{$state-prefix + $state} {
+      @content;
+    }
+  }
+}
+
+//黑夜模式
+@mixin dark($block) {
+  html.dark {
+    @include b($block) {
+      @content;
+    }
+  }
+}
+
+@mixin scroll-bar {
+  $scrollbar-thumb-background: getCssVar('text-color', 'disabled');
+  $scrollbar-track-background: getCssVar('fill-color', 'blank');
+
+  &::-webkit-scrollbar {
+    z-index: 11;
+    width: 6px;
+
+    &:horizontal {
+      height: 6px;
+    }
+
+    &-thumb {
+      border-radius: 5px;
+      width: 6px;
+      background: $scrollbar-thumb-background;
+    }
+
+    &-corner {
+      background: $scrollbar-track-background;
+    }
+
+    &-track {
+      background: $scrollbar-track-background;
+
+      &-piece {
+        background: $scrollbar-track-background;
+        width: 6px;
+      }
+    }
+  }
+}
+
+@mixin inset-input-border($color, $important: false) {
+  @if $important == true {
+    box-shadow: 0 0 0 1px $color inset !important;
+  } @else {
+    box-shadow: 0 0 0 1px $color inset;
+  }
+}
+
+//选择器popper
+@mixin picker-popper($background, $border, $box-shadow) {
+  &.#{$namespace}-popper {
+    background: $background;
+    border: $border;
+    box-shadow: $box-shadow;
+
+    .#{$namespace}-popper__arrow {
+      &::before {
+        border: $border;
+      }
+    }
+
+    @each $placement,
+      $adjacency
+        in ('top': 'left', 'bottom': 'right', 'left': 'bottom', 'right': 'top')
+    {
+      &[data-popper-placement^='#{$placement}'] {
+        .#{$namespace}-popper__arrow::before {
+          border-#{$placement}-color: transparent;
+          border-#{$adjacency}-color: transparent;
+        }
+      }
+    }
+  }
+}
+
+//伪类
+@mixin pseudo($pseudo) {
+  @at-root #{&}#{':#{$pseudo}'} {
+    @content;
+  }
+}

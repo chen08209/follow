@@ -1,0 +1,7 @@
+{
+  "include": ["**/*", ".vitepress/**/*"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "types": ["follow-ui/global"]
+  }
+}

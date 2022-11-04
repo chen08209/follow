@@ -1,0 +1,66 @@
+@use 'sass:map';
+
+@use 'config';
+@use 'function' as *;
+@use '../map/index' as *;
+
+/*
+  为css3变量赋值,值来源于sass变量
+*/
+@mixin set-css-var-value($name, $value) {
+  #{joinVarName($name)}: #{$value};
+}
+
+@mixin set-css-var-type($name, $type, $variables) {
+  #{getCssVarName($name, $type)}: #{map.get($variables, $type)};
+}
+
+@mixin set-css-color-type($colors, $type) {
+  @include set-css-var-value(('color', $type), map.get($colors, $type, 'base'));
+
+  @each $i in (3, 5, 7, 8, 9) {
+    @include set-css-var-value(('color', $type, 'light', $i),
+      map.get($colors, $type, 'light-#{$i}'));
+  }
+
+  @include set-css-var-value(('color', $type, 'dark-2'),
+    map.get($colors, $type, 'dark-2'));
+}
+
+/**
+  将全局css var,更具map赋予到组件身上,例如input:
+  --fl-input-border : var(--fl-border)
+ */
+@mixin set-component-css-var($name, $variables) {
+
+  @each $attribute,
+  $value in $variables {
+    @if $attribute =='default' {
+      #{getCssVarName($name)}: #{$value};
+    }
+
+    @else {
+      #{getCssVarName($name, $attribute)}: #{$value};
+    }
+  }
+}
+
+@mixin set-css-color-rgb($type) {
+  $color: map.get($colors, $type, 'base');
+  @include set-css-var-value(('color', $type, 'rgb'),
+    #{red($color),
+    green($color),
+    blue($color)
+  });
+}
+
+/**
+  变量赋值，变量的拼接方式见joinVarName，例如:
+  @include css-var-from-global('input-height', 'component-size')
+  => --fl-input-height:--fl-component-size
+ */
+@mixin css-var-from-global($var, $gVar) {
+  $varName: joinVarName($var);
+  $gVarName: joinVarName($gVar);
+  #{$varName}: var(#{$gVarName});
+}

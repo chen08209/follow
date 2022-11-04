@@ -1,0 +1,62 @@
+@use 'sass:map';
+@use 'mixins/mixins' as *;
+@use 'mixins/config' as *;
+@use 'mixins/function' as *;
+@use 'mixins/setVar' as *;
+@use 'map' as *;
+
+@include b(select-dropdown) {
+  @include set-component-css-var('select-dropdown-ripple', $ripple);
+  @include when(multiple) {
+    .#{$namespace}-select-dropdown__item {
+      .#{$namespace}-ripple-wrapper {
+        .#{$namespace}-ripple {
+          background-color: getCssVar('select-dropdown-ripple-bg-color-7');
+        }
+      }
+      &.selected {
+        .#{$namespace}-ripple-wrapper {
+          .#{$namespace}-ripple {
+            background-color: getCssVar('color-white');
+          }
+        }
+      }
+    }
+  }
+  @include e(item) {
+    font-size: map.get($select, 'font-size');
+    padding: 0 #{20 + 12}px 0 20px;
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: map.get($select-option, 'text-color');
+    height: map.get($select-option, 'height');
+    line-height: map.get($select-option, 'height');
+    box-sizing: border-box;
+    cursor: pointer;
+    z-index: 0;
+
+    .#{$namespace}-ripple-wrapper {
+      .#{$namespace}-ripple {
+        background-color: getCssVar('select-dropdown-ripple-bg-color-7');
+      }
+    }
+
+    @include when(disabled) {
+      color: map.get($select-option, 'disabled-color');
+      cursor: not-allowed;
+    }
+
+    &.hover,
+    &:hover {
+      background-color: map.get($select-option, 'hover-background');
+    }
+
+    &.selected {
+      color: map.get($select-option, 'selected-text-color');
+      background-color: map.get($select-option, 'selected-background');
+      font-weight: bold;
+    }
+  }
+}
