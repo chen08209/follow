@@ -63,7 +63,8 @@ import {
 import { useDelayedToggle, useId, usePopperContainer } from '@follow-ui/hooks'
 import { debugWarn, isBoolean, isUndefined } from '@follow-ui/utils'
 import { TOOLTIP_INJECTION_KEY } from '@follow-ui/tokens'
-import FlPopper, {
+import {
+  FlPopper,
   FlPopperArrow,
   popperArrowProps,
   popperProps,

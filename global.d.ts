@@ -24,6 +24,9 @@ declare module '@vue/runtime-core' {
     FlCheckboxButton: typeof import('follow-ui')['FlCheckboxButton']
     FlColorPicker: typeof import('follow-ui')['FlColorPicker']
   }
+  interface ComponentCustomProperties {
+    $message: typeof import('follow-ui')['FlMessage']
+  }
 }
 
 export {}

@@ -6,7 +6,6 @@ import ButtonGroup from './src/button-group.vue'
 export const FlButton = withInstall(Button, {
   ButtonGroup,
 })
-export default FlButton
 
 export const FlButtonGroup = withNoopInstall(ButtonGroup)
 

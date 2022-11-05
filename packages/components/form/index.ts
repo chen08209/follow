@@ -5,7 +5,6 @@ import FormItem from './src/form-item.vue'
 export const FlForm = withInstall(Form, {
   FormItem,
 })
-export default FlForm
 export const FlFormItem = withNoopInstall(FormItem)
 
 export * from './src/ts'

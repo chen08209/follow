@@ -36,7 +36,7 @@ button/disabled
 
 ## 图标按钮
 
-:::demo 使用 `icon`来定义按钮图标
+:::demo 使用 `icon` 来定义按钮图标, 通过`icon-position`设置图标位置
 
 button/icon
 

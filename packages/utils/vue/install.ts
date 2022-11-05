@@ -1,6 +1,7 @@
+import { App, Directive } from '@vue/runtime-core'
 import { NOOP } from '@vue/shared'
 
-import type { SFCWithInstall } from './typescript'
+import type { SFCInstallWithContext, SFCWithInstall } from './typescript'
 
 export const withInstall = <T, E extends Record<string, any>>(
   main: T,
@@ -24,4 +25,24 @@ export const withNoopInstall = <T>(component: T) => {
   ;(component as SFCWithInstall<T>).install = NOOP
 
   return component as SFCWithInstall<T>
+}
+
+export const withInstallFunction = <T>(fn: T, name: string) => {
+  ;(fn as SFCWithInstall<T>).install = (app: App) => {
+    ;(fn as SFCInstallWithContext<T>).content = app._context
+    app.config.globalProperties[name] = fn
+  }
+
+  return fn as SFCInstallWithContext<T>
+}
+
+export const withInstallDirective = <T extends Directive>(
+  directive: T,
+  name: string
+) => {
+  ;(directive as SFCWithInstall<T>).install = (app: App): void => {
+    app.directive(name, directive)
+  }
+
+  return directive as SFCWithInstall<T>
 }

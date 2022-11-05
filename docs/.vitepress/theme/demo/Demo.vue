@@ -38,7 +38,6 @@
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useClipboard } from '@vueuse/core'
 import VPIconCopy from '../../vitepress/components/icons/VPIconCopy.vue'
 import VPIconCheck from '../../vitepress/components/icons/VPIconCheck.vue'
 import VPIconChevronUp from '../../vitepress/components/icons/VPIconChevronUp.vue'

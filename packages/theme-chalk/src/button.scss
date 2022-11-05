@@ -283,6 +283,11 @@ $button-icon-span-gap: map.merge(
       vertical-align: bottom;
     }
   }
+  & span {
+    & + [class*='#{$namespace}-icon'] {
+      margin-left: map.get($button-icon-span-gap, 'default');
+    }
+  }
 
   @include when(plain) {
     @include css-var-from-global(
@@ -478,6 +483,12 @@ $button-icon-span-gap: map.merge(
 
       & [class*='#{$namespace}-icon'] {
         & + span {
+          margin-left: map.get($button-icon-span-gap, $size);
+        }
+      }
+
+      & span {
+        & + [class*='#{$namespace}-icon'] {
           margin-left: map.get($button-icon-span-gap, $size);
         }
       }

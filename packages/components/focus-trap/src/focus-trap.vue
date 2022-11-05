@@ -3,7 +3,7 @@
 </template>
 
 <script setup lang="ts">
-// @ts-nocheck
+//@ts-nocheck
 import {
   nextTick,
   onBeforeUnmount,
@@ -58,7 +58,6 @@ const emit = defineEmits([
   'focus-in',
   'focus-out',
   'focus-out-prevented',
-  //esc事件
   'release-requested',
 ])
 

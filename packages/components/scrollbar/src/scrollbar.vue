@@ -89,16 +89,12 @@ const style = computed<StyleValue>(() => {
 const handleScroll = () => {
   if (wrap.value) {
     barRef.value?.handleScroll(wrap.value)
-
     emit('scroll', {
       scrollTop: wrap.value.scrollTop,
       scrollLeft: wrap.value.scrollLeft,
     })
   }
 }
-
-// function scrollTo(xCord: number, yCord?: number): void
-// function scrollTo(options: ScrollToOptions): void
 
 function scrollTo(arg1: unknown, arg2?: number) {
   if (isObject(arg1)) {

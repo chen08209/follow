@@ -1,12 +1,22 @@
 <template>
-  <p>
-    <fl-color-picker v-model="color1" />
-    <fl-color-picker v-model="color2" show-label />
-  </p>
+  <div class="body">
+    <fl-scrollbar always>
+      <div class="content" />
+    </fl-scrollbar>
+  </div>
 </template>
-<script setup lang="ts">
-import { ref } from 'vue'
 
-const color1 = ref('#056de8')
-const color2 = ref('#f56c6c')
-</script>
+<script setup lang="ts"></script>
+
+<style scoped>
+.body {
+  width: 200px;
+  height: 80vh;
+  overflow: hidden;
+}
+.content {
+  height: 200vh;
+
+  background-color: yellow;
+}
+</style>

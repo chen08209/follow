@@ -2,11 +2,8 @@
   <p>
     <fl-button-group>
       <fl-button type="primary" :icon="ArrowLeft">Previous Page</fl-button>
-      <fl-button type="primary">
+      <fl-button type="primary" :icon="ArrowRight" icon-position="right">
         Next Page
-        <fl-icon class="fl-icon--right">
-          <ArrowRight />
-        </fl-icon>
       </fl-button>
     </fl-button-group>
   </p>

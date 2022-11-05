@@ -16,7 +16,8 @@
   --primary-color-2: #0099ff;
   --bg-color: #ffffff;
   --bg-color-2: #ffffff;
-  --bg-color-soft: rgba(249, 249, 249, 1);
+  --bg-color-soft: rgba(249, 249, 249, 0.5);
+  --bg-color-soft-hover: rgba(249, 249, 249, 0.3);
   // --bg-color-soft: #f9f9f980;
   --bg-color-deep: #e5e5e5;
   --border-color: #dcdfe6;
@@ -57,7 +58,8 @@ html.dark {
   color-scheme: dark;
   --bg-color: #242424;
   --bg-color-2: #000000b3;
-  --bg-color-soft: #2f2f2f80;
+  --bg-color-soft: rgba(47, 47, 47, 0.5);
+  --bg-color-soft-hover: rgba(47, 47, 47, 0.3);
   --bg-color-deep: #242424;
   --border-color: #4c4d4f;
   --text-color: #e5eaf3;

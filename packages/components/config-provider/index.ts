@@ -1,7 +1,6 @@
 import { withInstall } from '@follow-ui/utils'
-import ConfigProvider from './src/ts/config-provider'
+import ConfigProvider from './src/config-provider'
 
 export const FlConfigProvider = withInstall(ConfigProvider)
-export default FlConfigProvider
 
-export * from './src/ts'
+export * from './src/config-provider'

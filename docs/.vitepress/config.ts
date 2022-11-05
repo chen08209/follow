@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const head = [['link', { ref: 'icon', href: 'favicon.ico' }]]
 const nav = [
-  { text: '指南', link: '/guide/characteristic', activeMatch: '/guide/' },
+  { text: '指引', link: '/guide/characteristic', activeMatch: '/guide/' },
   { text: '组件', link: '/components/button', activeMatch: '/components/' },
 ]
 const sidebar = {
@@ -67,6 +67,11 @@ const sidebar = {
           text: '颜色选择器',
           link: '/components/color',
         },
+      ],
+    },
+    {
+      text: '组合组件',
+      items: [
         {
           text: '日期选择器',
           link: '/components/date',
@@ -79,11 +84,6 @@ const sidebar = {
           text: '日期时间选择器',
           link: '/components/datetime',
         },
-      ],
-    },
-    {
-      text: '组合组件',
-      items: [
         {
           text: '表单',
           link: '/components/form',
@@ -91,6 +91,15 @@ const sidebar = {
         {
           text: '表格',
           link: '/components/table',
+        },
+      ],
+    },
+    {
+      text: '内置插件',
+      items: [
+        {
+          text: '消息提示',
+          link: '/components/message',
         },
       ],
     },
@@ -110,10 +119,18 @@ export default {
     outlineTitle: '本页目录',
     nav,
     sidebar,
+    socialLinks: [
+      { icon: 'github', link: 'https://github.com/chen08209/follow' },
+    ],
   },
   vite: {
     server: {
       host: true,
+    },
+  },
+  vue: {
+    template: {
+      ssr: true,
     },
   },
   markdown: {

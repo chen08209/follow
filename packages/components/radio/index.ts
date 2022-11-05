@@ -8,7 +8,6 @@ export const FlRadio = withInstall(Radio, {
   RadioButton,
   RadioGroup,
 })
-export default FlRadio
 export const FlRadioGroup = withNoopInstall(RadioGroup)
 export const FlRadioButton = withNoopInstall(RadioButton)
 

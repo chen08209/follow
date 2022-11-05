@@ -1,7 +1,10 @@
 {
-  "include": ["**/*", ".vitepress/**/*"],
-  "exclude": ["node_modules"],
+  "extends": "@vue/tsconfig/tsconfig.web.json",
+  "include": ["**/*", ".vitepress/**/*", "example/**/*.vue"],
+  "exclude": ["node_modules", "dist"],
   "compilerOptions": {
+    "noImplicitAny": false,
+    "preserveValueImports": false,
     "types": ["follow-ui/global"]
   }
 }

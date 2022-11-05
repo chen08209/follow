@@ -13,7 +13,6 @@ export const buttonTypes = [
   'warning',
   'info',
   'danger',
-  'text',
   '',
 ] as const
 
@@ -28,6 +27,11 @@ export const buttonProps = buildProps({
   icon: {
     type: iconPropType,
     default: '',
+  },
+  iconPosition: {
+    type: String,
+    values: ['left', 'right'],
+    default: 'left',
   },
   ripple: {
     type: Boolean,

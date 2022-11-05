@@ -11,6 +11,7 @@ export const scrollbarProps = {
     type: [String, Number],
     default: '',
   },
+  // 使用默认样式
   native: Boolean,
   wrapStyle: {
     type: definePropType<StyleValue>([String, Object, Array]),
@@ -28,7 +29,8 @@ export const scrollbarProps = {
     type: [String, Array, Object],
     default: '',
   },
-  noResize: Boolean, // 如果 container 尺寸不会发生变化，最好设置它可以优化性能
+  // 如果 container 尺寸不会发生变化，最好设置它可以优化性能
+  noResize: Boolean,
   tag: {
     type: String,
     default: 'div',

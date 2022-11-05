@@ -22,22 +22,36 @@
     @click="handleClick"
   >
     <ripple-wrapper v-if="isRipple" :disabled="disabled" />
-    <template v-if="loading">
-      <slot v-if="$slots.loading" name="loading" />
-      <fl-icon v-else :class="ns.is('loading')">
-        <component :is="loadingIcon" />
+    <template v-if="iconPosition !== 'right'">
+      <template v-if="loading">
+        <slot v-if="$slots.loading" name="loading" />
+        <fl-icon v-else :class="ns.is('loading')">
+          <component :is="loadingIcon" />
+        </fl-icon>
+      </template>
+      <fl-icon v-else-if="icon || $slots.icon">
+        <component :is="icon" v-if="icon" />
+        <slot v-else name="icon" />
       </fl-icon>
     </template>
-    <fl-icon v-else-if="icon || $slots.icon">
-      <component :is="icon" v-if="icon" />
-      <slot v-else name="icon" />
-    </fl-icon>
     <span
       v-if="$slots.default"
       :class="{ [ns.em('text', 'expand')]: shouldAddSpace }"
     >
       <slot />
     </span>
+    <template v-if="iconPosition === 'right'">
+      <template v-if="loading">
+        <slot v-if="$slots.loading" name="loading" />
+        <fl-icon v-else :class="ns.is('loading')">
+          <component :is="loadingIcon" />
+        </fl-icon>
+      </template>
+      <fl-icon v-else-if="icon || $slots.icon">
+        <component :is="icon" v-if="icon" />
+        <slot v-else name="icon" />
+      </fl-icon>
+    </template>
   </button>
 </template>
 

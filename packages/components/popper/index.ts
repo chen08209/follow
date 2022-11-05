@@ -14,8 +14,6 @@ export {
 
 export const FlPopper = withInstall(Popper)
 
-export default FlPopper
-
 export type { Placement, Options } from '@popperjs/core'
 
 export type FlPopperArrowInstance = InstanceType<typeof PopperArrow>

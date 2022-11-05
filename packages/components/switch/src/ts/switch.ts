@@ -44,6 +44,10 @@ export const switchProps = buildProps({
     type: String,
     default: '',
   },
+  loading: {
+    type: Boolean,
+    default: false,
+  },
   //激活value
   activeValue: {
     type: [Boolean, String, Number],

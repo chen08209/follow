@@ -21,16 +21,13 @@
       <div :class="ns.e('warpper')">
         <ripple-wrapper center :disabled="switchDisabled" />
         <div :class="ns.e('action')">
-          <fl-icon
-            v-if="activeIcon"
-            :class="[ns.is('icon'), checked ? ns.is('show') : ns.is('hide')]"
-          >
+          <fl-icon v-if="loading" :class="ns.is('loading')"
+            ><loading
+          /></fl-icon>
+          <fl-icon v-else-if="checked" :class="[ns.is('icon')]">
             <component :is="activeIcon" />
           </fl-icon>
-          <fl-icon
-            v-if="inactiveIcon"
-            :class="[ns.is('icon'), !checked ? ns.is('show') : ns.is('hide')]"
-          >
+          <fl-icon v-else-if="!checked" :class="[ns.is('icon')]">
             <component :is="inactiveIcon" />
           </fl-icon>
         </div>
@@ -55,6 +52,7 @@ import {
   useNamespace,
   useSize,
 } from '@follow-ui/hooks'
+import { Loading } from '@element-plus/icons-vue'
 import { FlIcon } from '../../icon'
 import { rippleWrapper } from '../../ripple'
 import { switchEmits, switchProps } from './ts'
@@ -74,7 +72,7 @@ const { inputId } = useFormItemInputId(props, {
   formItemContext: formItem,
 })
 
-const switchDisabled = useDisabled()
+const switchDisabled = useDisabled(computed(() => props.loading))
 const input = ref<HTMLInputElement>()
 const core = ref<HTMLSpanElement>()
 

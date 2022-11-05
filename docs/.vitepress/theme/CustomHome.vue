@@ -29,13 +29,18 @@
       </div>
     </div>
     <div class="features">
-      <div v-for="item in cards" :key="item.label" class="feature">
+      <a
+        v-for="item in cards"
+        :key="item.label"
+        class="feature"
+        :href="site.base + item.link"
+      >
         <div class="container">
           <div class="icon">{{ item.icon }}</div>
           <p class="title">{{ item.label }}</p>
           <p class="content">{{ item.content }}</p>
         </div>
-      </div>
+      </a>
     </div>
   </main>
 </template>
@@ -52,13 +57,13 @@ const cards = [
     label: '指引',
     content: '安装以及基本使用, 快速体验封装框架',
     icon: '⚡️',
-    link: '',
+    link: 'guide/characteristic.html',
   },
   {
     label: '组件',
     content: '预览, 体验组件交互细节, 便于快速开发',
     icon: '📦',
-    link: '',
+    link: 'components/button.html',
   },
   {
     label: '更多',
@@ -172,7 +177,6 @@ const handlerCopy = async () => {
         background-color: var(--bg-color-soft);
         backdrop-filter: saturate(50%) blur(200px);
         height: 100%;
-        position: relative;
         width: 100%;
         position: relative;
         border-radius: 0.8rem;
@@ -180,6 +184,7 @@ const handlerCopy = async () => {
         transition: all 0.3s ease-in-out;
         line-height: 2rem;
         padding: 2rem;
+        border: 1px solid var(--fl-border-color-light);
 
         .icon {
           @include flex;
@@ -198,6 +203,9 @@ const handlerCopy = async () => {
           font-size: 1rem;
           color: var(--text-color-2);
         }
+      }
+      .container:hover {
+        background-color: var(--bg-color);
       }
 
       &:nth-child(1) {
