@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
-    "serve": "vitepress build && serve",
+    "serve": "vitepress build && vitepress serve",
     "debug": "node --inspect-brk ./node_modules/vitepress/dist/node/cli.js"
   },
   "keywords": [],
@@ -23,6 +23,6 @@
     "escape-html": "^1.0.3",
     "markdown-it-container": "^3.0.0",
     "prismjs": "^1.29.0",
-    "vitepress": "1.0.0-alpha.21"
+    "vitepress": "1.0.0-alpha.28"
   }
 }

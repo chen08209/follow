@@ -83,11 +83,11 @@ export const mdPlugin = (md: MarkdownIt) => {
           }
           i++
         }
-        return `<Code source="${encodeURIComponent(
+        return `<ClientOnly><Code source="${encodeURIComponent(
           highlight(content.trim(), language)
         )}" language="${language}">`
       } else {
-        return '</Code>'
+        return '</Code></ClientOnly>'
       }
     },
   } as ContainerOpts)

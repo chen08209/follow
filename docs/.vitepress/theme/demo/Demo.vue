@@ -1,40 +1,48 @@
+
 <template>
-  <p v-html="decodedDescription" />
-  <div class="example">
-    <Example :file="path" :demo="path" />
-    <div class="btns">
-      <fl-icon
-        :size="16"
-        class="btn"
-        @click="handlerCode"
-        @mouseleave="isCopied = false"
-      >
-        <component
-          :is="isCopied ? VPIconCheck : VPIconCopy"
-          :style="{
-            fill: isCopied ? 'var(--fl-color-success)' : 'currentColor',
-          }"
-        />
-      </fl-icon>
-      <fl-icon :size="16" class="btn" @click="toggleSourceVisible()">
-        <component :is="sourceVisible ? VPIconCodeOpen : VPIconCodeClose" />
-      </fl-icon>
-    </div>
-    <FlCollapseTransition>
-      <Code v-show="sourceVisible" ref="code" :source="source" language="vue" />
-    </FlCollapseTransition>
-    <Transition name="fl-fade-in-linear">
-      <div v-show="sourceVisible" class="bar">
-        <fl-button
-          :icon="VPIconChevronUp"
-          link
-          @click="toggleSourceVisible(false)"
+  <ClientOnly class="demo">
+    <p v-html="decodedDescription" />
+    <div class="example">
+      <Example :file="path" :demo="path" />
+      <div class="btns">
+        <fl-icon
+          :size="16"
+          class="btn"
+          @click="handlerCode"
+          @mouseleave="isCopied = false"
         >
-          隐藏代码
-        </fl-button>
+          <component
+            :is="isCopied ? VPIconCheck : VPIconCopy"
+            :style="{
+              fill: isCopied ? 'var(--fl-color-success)' : 'currentColor',
+            }"
+          />
+        </fl-icon>
+        <fl-icon :size="16" class="btn" @click="toggleSourceVisible()">
+          <component :is="sourceVisible ? VPIconCodeOpen : VPIconCodeClose" />
+        </fl-icon>
       </div>
-    </Transition>
-  </div>
+      <FlCollapseTransition>
+        <Code
+          v-show="sourceVisible"
+          ref="code"
+          :source="source"
+          language="vue"
+        />
+      </FlCollapseTransition>
+      <Transitio name="fl-fade-in-linear">
+        <div v-show="sourceVisible" class="bar">
+          <fl-button
+            :icon="VPIconChevronUp"
+            link
+            @click="toggleSourceVisible(false)"
+          >
+            隐藏代码
+          </fl-button>
+        </div>
+      </Transitio>
+    </div>
+  </ClientOnly>
 </template>
 <script setup lang="ts">
 import { computed, ref } from 'vue'
@@ -57,13 +65,7 @@ const sourceVisible = ref(false)
 const isCopied = ref(false)
 
 const decodedDescription = computed(() =>
-  decodeURIComponent(props.description!)
-)
-
-const copyTip = computed(() => (isCopied.value ? '复制成功' : '复制代码'))
-
-const toggleTip = computed(() =>
-  sourceVisible.value ? '隐藏代码' : '显示代码'
+  decodeURIComponent(props.description ?? '')
 )
 
 const handlerCode = async () => {

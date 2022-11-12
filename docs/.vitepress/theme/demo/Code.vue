@@ -14,7 +14,7 @@ const props = defineProps({
   },
 })
 
-const languageClass = computed(() => 'language-' + props.language)
+const languageClass = computed(() => `language-${props.language}`)
 
 const decoded = computed(() => {
   return decodeURIComponent(props.source)
