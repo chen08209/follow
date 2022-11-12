@@ -2,46 +2,58 @@
   <main class="home">
     <div class="hero">
       <h1 class="title">
-        <span class="clip">"暂时"</span>
-        <span>没有任何意义的</span>
-        <span>Vue3组件库</span>
-        <span class="comment">当然, 也可能不只是暂时</span>
+        <Transition name="up1" appear>
+          <span class="clip">"暂时"</span>
+        </Transition>
+        <Transition name="up2" appear>
+          <span class="common">没有任何意义的</span>
+        </Transition>
+        <Transition name="up2" appear>
+          <span class="common">Vue3组件库</span>
+        </Transition>
+        <Transition name="up3" appear>
+          <span class="comment">当然, 也可能不只是暂时</span>
+        </Transition>
       </h1>
-      <div class="actions">
-        <a :href="site.base + 'guide/characteristic.html'" class="action">
-          <fl-button type="primary" :ripple="false">
-            快速开始
-            <fl-icon class="icon"><ArrowRight /></fl-icon>
-          </fl-button>
+      <Transition name="up4" appear>
+        <div class="actions">
+          <a :href="site.base + 'guide/characteristic.html'" class="action">
+            <fl-button type="primary" :ripple="false">
+              快速开始
+              <fl-icon class="icon"><ArrowRight /></fl-icon>
+            </fl-button>
+          </a>
+          <div class="action">
+            <fl-button
+              ref="cliButton"
+              @blur="isCopied = false"
+              @click="handlerCopy"
+            >
+              npm i follow-ui
+              <fl-icon class="icon">
+                <component :is="isCopied ? Check : CopyDocument"
+              /></fl-icon>
+            </fl-button>
+          </div>
+        </div>
+      </Transition>
+    </div>
+    <Transition name="slide" appear>
+      <div class="features">
+        <a
+          v-for="item in cards"
+          :key="item.label"
+          class="feature"
+          :href="site.base + item.link"
+        >
+          <div class="container">
+            <div class="icon">{{ item.icon }}</div>
+            <p class="title">{{ item.label }}</p>
+            <p class="content">{{ item.content }}</p>
+          </div>
         </a>
-        <div class="action">
-          <fl-button
-            ref="cliButton"
-            @blur="isCopied = false"
-            @click="handlerCopy"
-          >
-            npm i follow-ui
-            <fl-icon class="icon">
-              <component :is="isCopied ? Check : CopyDocument"
-            /></fl-icon>
-          </fl-button>
-        </div>
       </div>
-    </div>
-    <div class="features">
-      <a
-        v-for="item in cards"
-        :key="item.label"
-        class="feature"
-        :href="site.base + item.link"
-      >
-        <div class="container">
-          <div class="icon">{{ item.icon }}</div>
-          <p class="title">{{ item.label }}</p>
-          <p class="content">{{ item.content }}</p>
-        </div>
-      </a>
-    </div>
+    </Transition>
   </main>
 </template>
 <script setup lang="ts">
@@ -107,6 +119,7 @@ const handlerCopy = async () => {
   box-sizing: border-box;
   max-width: calc(var(--vp-layout-max-width) - 64px);
   width: 100%;
+  overflow-x: hidden;
   height: 100%;
   padding: 4rem 0;
   padding-bottom: 3rem;
@@ -119,6 +132,7 @@ const handlerCopy = async () => {
     text-align: center;
     padding: 0 1rem 3rem 0;
     box-sizing: border-box;
+    // overflow: hidden;
     .title {
       width: max-content;
       line-height: 5.75rem;
@@ -162,11 +176,10 @@ const handlerCopy = async () => {
     @include flex;
     flex-wrap: wrap;
     flex-grow: 1;
-    // padding-bottom: 4rem;
     flex-basis: 50%;
     box-sizing: border-box;
     position: relative;
-
+    opacity: 0.9;
     .feature {
       height: 50%;
       cursor: pointer;
@@ -181,7 +194,6 @@ const handlerCopy = async () => {
         position: relative;
         border-radius: 0.8rem;
         bottom: 0;
-        transition: all 0.3s ease-in-out;
         line-height: 2rem;
         padding: 2rem;
         border: 1px solid var(--fl-border-color-light);
@@ -231,5 +243,44 @@ const handlerCopy = async () => {
   background: #0099ff;
   filter: blur(100px);
   will-change: transform;
+}
+
+.slide-enter-active {
+  animation: slide 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(200px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.up1-enter-active {
+  animation: up 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.up2-enter-active {
+  animation: up 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.up3-enter-active {
+  animation: up 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.up4-enter-active {
+  animation: up 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes up {
+  0% {
+    transform: translateY(200px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 </style>
