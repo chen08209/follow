@@ -57,7 +57,6 @@
                 :visible="minTimePickerVisible"
                 :format="timeFormat"
                 datetime-role="start"
-                :time-arrow-control="arrowControl"
                 :parsed-value="leftDate"
                 @pick="handleMinTimePick"
               />
@@ -101,7 +100,6 @@
                 datetime-role="end"
                 :visible="maxTimePickerVisible"
                 :format="timeFormat"
-                :time-arrow-control="arrowControl"
                 :parsed-value="rightDate"
                 @pick="handleMaxTimePick"
               />
@@ -246,14 +244,8 @@ const emit = defineEmits([
 ])
 const unit = 'month'
 const pickerBase = inject(PICKER_BASE) as any
-const {
-  disabledDate,
-  cellClassName,
-  format,
-  defaultTime,
-  arrowControl,
-  clearable,
-} = pickerBase.props
+const { disabledDate, cellClassName, format, defaultTime, clearable } =
+  pickerBase.props
 const shortcuts = toRef(pickerBase.props, 'shortcuts')
 const defaultValue = toRef(pickerBase.props, 'defaultValue')
 const { lang } = useLocale()

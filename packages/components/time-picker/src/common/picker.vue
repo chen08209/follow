@@ -21,6 +21,7 @@
     @show="onShow"
     @hide="onHide"
   >
+    <!-- :readonly="!editable || readonly || isDatesPicker || type === 'week'" -->
     <template #default>
       <fl-input
         v-if="!isRangeInput"

@@ -71,7 +71,7 @@ const formItemContext = inject(formItemContextKey, undefined)
 const { nextZIndex } = useZIndex()
 const ns = useNamespace('popper')
 const popperContentRef = ref<HTMLElement>()
-const focusStartRef = ref<string | HTMLElement>('first')
+const focusStartRef = ref<'container' | 'first' | HTMLElement>('first')
 
 const arrowRef = ref<HTMLElement>()
 const arrowOffset = ref<number>()

@@ -2,9 +2,9 @@
 
 用于选择或输入时间
 
-## 两种不同的时间选择器
+## 基础使用
 
-:::demo 使用`arrow-control`设置时间选择器模式
+:::demo 使用`v-model`绑定默认值
 
 time/basic
 
@@ -12,7 +12,7 @@ time/basic
 
 ## 限制时间选择范围
 
-:::demo 使用`disabledHours`，`disabledMinutes` 和 `disabledSeconds`限制时间选择范围
+:::demo 通过`disabledHours`，`disabledMinutes` 和 `disabledSeconds`限制时间选择范围
 
 time/disabled
 

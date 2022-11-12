@@ -1,4 +1,3 @@
-//时间单位
 export const timeUnits = ['hours', 'minutes', 'seconds'] as const
 
 export const DEFAULT_FORMATS_TIME = 'HH:mm:ss'

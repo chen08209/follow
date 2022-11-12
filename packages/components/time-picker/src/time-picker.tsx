@@ -4,8 +4,9 @@ import customParseFormat from 'dayjs/plugin/customParseFormat.js'
 import Picker from './common/picker.vue'
 import TimePickPanel from './panel/panel-time-pick.vue'
 import TimeRangePanel from './panel/panel-time-range.vue'
-import { DEFAULT_FORMATS_TIME, pickerProps } from './ts'
+import { pickerProps } from './ts'
 import { PICKER_POPPER_OPTIONS } from '@follow-ui/tokens'
+import { DEFAULT_FORMATS_TIME } from '@follow-ui/constants'
 dayjs.extend(customParseFormat)
 
 export default defineComponent({
@@ -26,7 +27,9 @@ export default defineComponent({
       : ['time', TimePickPanel]
 
     const modelUpdater = (value: any) => ctx.emit('update:modelValue', value)
+
     provide(PICKER_POPPER_OPTIONS, props.popperOptions)
+
     ctx.expose({
       focus: (e: FocusEvent | undefined) => {
         commonPicker.value?.handleFocusInput(e)

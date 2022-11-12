@@ -138,11 +138,8 @@ const onBeforeLeave = () => {
 
 const onAfterShow = () => {
   onShow()
-  //定义stop
   stopHandle = onClickOutside(
-    computed(() => {
-      return contentRef.value?.popperContentRef
-    }),
+    computed(() => contentRef.value?.popperContentRef),
     () => {
       if (unref(controlled)) return
       const $trigger = unref(trigger)
@@ -168,6 +165,17 @@ watch(
     //如果val != true,调用stopHandle
     if (!val) {
       stopHandle?.()
+    } else {
+      stopHandle = onClickOutside(
+        computed(() => contentRef.value?.popperContentRef),
+        () => {
+          if (unref(controlled)) return
+          const $trigger = unref(trigger)
+          if ($trigger !== 'hover') {
+            onClose()
+          }
+        }
+      )
     }
   },
   {

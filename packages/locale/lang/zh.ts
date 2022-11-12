@@ -5,6 +5,13 @@ export default {
       confirm: '确定',
       clear: '清空',
     },
+    timepicker: {
+      placeholder: {
+        default: '任意时间',
+        start: '开始时间',
+        end: '结束事件',
+      },
+    },
     datepicker: {
       now: '此刻',
       today: '今天',
@@ -34,7 +41,7 @@ export default {
       month10: '10 月',
       month11: '11 月',
       month12: '12 月',
-      // week: '周次',
+      week: '周次',
       weeks: {
         sun: '日',
         mon: '一',

@@ -13,6 +13,7 @@ import type { CSSProperties } from 'vue'
 
 export default defineComponent({
   name: 'FlIcon',
+  inheritAttrs: false,
   props: iconProps,
   setup(props) {
     const ns = useNamespace('icon')

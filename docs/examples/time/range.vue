@@ -1,5 +1,8 @@
 <template>
-  <fl-time-picker v-model="value" placeholder="选择时间" is-range />
+  <fl-time-picker
+    v-model="value"
+    is-range
+  />
 </template>
 
 <script lang="ts" setup>

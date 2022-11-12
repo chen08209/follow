@@ -2,7 +2,15 @@ import { Clock, Calendar } from '@element-plus/icons-vue'
 import { TooltipInstance } from '@follow-ui/components/tooltip'
 import { EVENT_CODE } from '@follow-ui/constants'
 import { useLocale, useNamespace, useFormItem, useSize } from '@follow-ui/hooks'
-import { PICKER_POPPER_OPTIONS, PICKER_BASE } from '@follow-ui/tokens'
+import {
+  PICKER_POPPER_OPTIONS,
+  PICKER_BASE,
+  Input,
+  DateModelType,
+  DateOrDates,
+  DayOrDays,
+  SingleOrRange,
+} from '@follow-ui/tokens'
 import { debugWarn, isArray } from '@follow-ui/utils'
 import {
   inject,
@@ -18,18 +26,9 @@ import {
 import { onClickOutside } from '@vueuse/core'
 import { Dayjs } from 'dayjs'
 import { isEqual } from 'lodash-unified'
-import { Options } from 'unplugin-vue-macros'
-import {
-  DateModelType,
-  DateOrDates,
-  DayOrDays,
-  Input,
-  PickerEmits,
-  PickerOptions,
-  PickerProps,
-  SingleOrRange,
-} from './picker'
+import { PickerEmits, PickerOptions, PickerProps } from './picker'
 import { parseDate, valueEquals, formatter } from './utils'
+import { Options } from '@popperjs/core'
 
 export const usePicker: any = (
   props: PickerProps,
@@ -348,6 +347,7 @@ export const usePicker: any = (
       hasJustTabExitedInput = false
     }, 0)
   }
+
   //清除事件
   const handleClear = (e: MouseEvent) => {
     if (props.readonly || pickerDisabled.value) return
@@ -577,7 +577,6 @@ export const usePicker: any = (
   const onCalendarChange = (e: [Date, false | Date]) => {
     emit('calendar-change', e)
   }
-
   //面板改变事件
   const onPanelChange = (
     value: [Dayjs, Dayjs],
@@ -586,7 +585,6 @@ export const usePicker: any = (
   ) => {
     emit('panel-change', value, mode, view)
   }
-
   //点击actualInputRef外部事件
   onClickOutside(actualInputRef, (e: PointerEvent) => {
     const unrefedPopperEl = unref(popperEl)
@@ -619,6 +617,7 @@ export const usePicker: any = (
       valueOnOpen.value = props.modelValue
     }
   })
+
   provide(PICKER_BASE, {
     props,
   })

@@ -1,22 +1,9 @@
 <template>
-  <div class="body">
-    <fl-scrollbar always>
-      <div class="content" />
-    </fl-scrollbar>
-  </div>
+  <fl-time-picker v-model="value" />
 </template>
 
-<script setup lang="ts"></script>
-
-<style scoped>
-.body {
-  width: 200px;
-  height: 80vh;
-  overflow: hidden;
-}
-.content {
-  height: 200vh;
-
-  background-color: yellow;
-}
-</style>
+<script lang="ts" setup>
+import { ref } from 'vue'
+import { FlTimePicker } from '@follow-ui/components/time-picker-v2'
+const value = ref()
+</script>

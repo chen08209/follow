@@ -52,7 +52,6 @@
             <time-pick-panel
               :visible="timePickerVisible"
               :format="timeFormat"
-              :time-arrow-control="arrowControl"
               :parsed-value="innerDate"
               @pick="handleTimePick"
             />
@@ -216,7 +215,7 @@ const handleShortcutClick = useShortcut(lang)
 const popper = inject(TOOLTIP_INJECTION_KEY)
 //从picker取值
 const pickerBase = inject(PICKER_BASE) as any
-const { shortcuts, disabledDate, cellClassName, defaultTime, arrowControl } =
+const { shortcuts, disabledDate, cellClassName, defaultTime } =
   pickerBase.props
 
 //获取defaultValue
@@ -376,7 +375,7 @@ const emitPick = (value: Dayjs | Dayjs[], ...args: any[]) => {
 const handleDatePick = (value: DateTableEmits, keepOpen?: boolean) => {
   if (selectionMode.value === 'date') {
     value = value as Dayjs
-    let newDate = props.parsedValue
+    const newDate = props.parsedValue
       ? (props.parsedValue as Dayjs)
           .year(value.year())
           .month(value.month())

@@ -1,8 +1,7 @@
 <template>
   <slot :handle-keydown="onKeydown" />
 </template>
-
-<script setup lang="ts">
+<script lang="ts" setup>
 //@ts-nocheck
 import {
   nextTick,
@@ -13,9 +12,10 @@ import {
   unref,
   watch,
 } from 'vue'
-import { EVENT_CODE } from '@follow-ui/constants/aria'
-import { useEscapeKeydown } from '@follow-ui/hooks/use-escape-keydown'
-import { isString } from '@vueuse/core'
+import { isNil } from 'lodash-unified'
+import { EVENT_CODE } from '@follow-ui/constants'
+import { useEscapeKeydown } from '@follow-ui/hooks'
+import { isString } from '@follow-ui/utils'
 import {
   FOCUS_AFTER_RELEASED,
   FOCUS_AFTER_TRAPPED,
@@ -23,14 +23,19 @@ import {
   FOCUS_TRAP_INJECTION_KEY,
   ON_RELEASE_FOCUS_EVT,
   ON_TRAP_FOCUS_EVT,
+} from '@follow-ui/tokens'
+
+import {
+  createFocusOutPreventedEvent,
   focusFirstDescendant,
   focusableStack,
   getEdges,
+  isFocusCausedByUserEvent,
   obtainAllFocusableElements,
   tryFocus,
-} from './ts'
-
-import type { FocusLayer } from './ts'
+  useFocusReason,
+} from './utils'
+import type { FocusLayer } from './utils'
 import type { PropType } from 'vue'
 
 defineOptions({
@@ -40,39 +45,31 @@ defineOptions({
 
 const props = defineProps({
   loop: Boolean,
-  //是否进入捕获状态
   trapped: Boolean,
-  //容器
   focusTrapEl: Object as PropType<HTMLElement>,
   focusStartEl: {
-    type: [Object, String] as PropType<string | HTMLElement>,
+    type: [Object, String] as PropType<'container' | 'first' | HTMLElement>,
     default: 'first',
   },
 })
 
 const emit = defineEmits([
-  //开始捕获
   ON_TRAP_FOCUS_EVT,
-  //停止捕获
   ON_RELEASE_FOCUS_EVT,
-  'focus-in',
-  'focus-out',
-  'focus-out-prevented',
+  'focusin',
+  'focusout',
+  'focusout-prevented',
   'release-requested',
 ])
 
-//传入的focusTrapEl,详见watch
 const forwardRef = ref<HTMLElement | undefined>()
-
-//进入trap前的最后一个元素
 let lastFocusBeforeTrapped: HTMLElement | null
-
-//进入trap后最后点击的元素
 let lastFocusAfterTrapped: HTMLElement | null
 
-//按下esc时触发的hook
+const { focusReason } = useFocusReason()
+
+//esc事件
 useEscapeKeydown((event) => {
-  //如果已经捕获而且未暂停,执行release-requested
   if (props.trapped && !focusLayer.paused) {
     emit('release-requested', event)
   }
@@ -89,122 +86,89 @@ const focusLayer: FocusLayer = {
 }
 
 const onKeydown = (e: KeyboardEvent) => {
-  //如果没有聚焦容器
   if (!props.loop && !props.trapped) return
-
   if (focusLayer.paused) return
 
   const { key, altKey, ctrlKey, metaKey, currentTarget, shiftKey } = e
-
   const { loop } = props
-
-  //判断是否点击的是tab键
   const isTabbing = key === EVENT_CODE.tab && !altKey && !ctrlKey && !metaKey
 
   const currentFocusingEl = document.activeElement
-
-  //如果是tab键,使用gatEdges获得可focus的元素数组边界
   if (isTabbing && currentFocusingEl) {
     const container = currentTarget as HTMLElement
-
     const [first, last] = getEdges(container)
-
-    //判断是否可以tabbable
     const isTabbable = first && last
-
-    //如果不可以tabbable
     if (!isTabbable) {
-      //且当前聚焦的元素正好是target,触发失焦回调
       if (currentFocusingEl === container) {
-        //阻止默认操作
-        e.preventDefault()
-        emit('focus-out-prevented')
+        const focusoutPreventedEvent = createFocusOutPreventedEvent({
+          focusReason: focusReason.value,
+        })
+        emit('focusout-prevented', focusoutPreventedEvent)
+        if (!focusoutPreventedEvent.defaultPrevented) {
+          e.preventDefault()
+        }
       }
     } else {
-      /**
-       * 如果没有按住shift键，且currentFocusingEl是最后一个可tabbable，触发失焦事件
-       * 如果按住了shift键,，tab会往前寻找，如果currentFocusingEl是第一个元素或者是当前元素，触发失焦事件
-       */
       if (!shiftKey && currentFocusingEl === last) {
-        e.preventDefault()
-        if (loop) {
-          tryFocus(first, true)
+        const focusoutPreventedEvent = createFocusOutPreventedEvent({
+          focusReason: focusReason.value,
+        })
+        emit('focusout-prevented', focusoutPreventedEvent)
+        if (!focusoutPreventedEvent.defaultPrevented) {
+          e.preventDefault()
+          if (loop) tryFocus(first, true)
         }
-        emit('focus-out-prevented')
       } else if (
         shiftKey &&
         [first, container].includes(currentFocusingEl as HTMLElement)
       ) {
-        e.preventDefault()
-        if (loop) {
-          tryFocus(last, true)
+        const focusoutPreventedEvent = createFocusOutPreventedEvent({
+          focusReason: focusReason.value,
+        })
+        emit('focusout-prevented', focusoutPreventedEvent)
+        if (!focusoutPreventedEvent.defaultPrevented) {
+          e.preventDefault()
+          if (loop) tryFocus(last, true)
         }
-        emit('focus-out-prevented')
       }
     }
   }
 }
 
-provide(FOCUS_TRAP_INJECTION_KEY, {
-  focusTrapRef: forwardRef,
-  onKeydown,
-})
-
-//监听传入的容器
-watch(
-  () => props.focusTrapEl,
-  (focusTrapEl) => {
-    if (focusTrapEl) {
-      forwardRef.value = focusTrapEl
-    }
-  },
-  { immediate: true }
-)
-
-//监听forwardRef,为新的容器增加监听事件,移除旧的容器监听事件
-watch([forwardRef], ([forwardRef], [oldForwardRef]) => {
-  if (forwardRef) {
-    forwardRef.addEventListener('keydown', onKeydown)
-    forwardRef.addEventListener('focusin', onFocusIn)
-    forwardRef.addEventListener('focusout', onFocusOut)
-  }
-  if (oldForwardRef) {
-    oldForwardRef.removeEventListener('keydown', onKeydown)
-    oldForwardRef.removeEventListener('focusin', onFocusIn)
-    oldForwardRef.removeEventListener('focusout', onFocusOut)
-  }
-})
-
-//捕获聚焦事件
 const trapOnFocus = (e: Event) => {
   emit(ON_TRAP_FOCUS_EVT, e)
 }
-
 const releaseOnFocus = (e: Event) => emit(ON_RELEASE_FOCUS_EVT, e)
 
-//聚焦事件
-const onFocusIn = (e: Event) => {
-  //如果不存在容器return
+//聚焦
+const onFocusIn = (e: FocusEvent) => {
   const trapContainer = unref(forwardRef)
   if (!trapContainer) return
 
   const target = e.target as HTMLElement | null
+  const relatedTarget = e.relatedTarget as HTMLElement | null
 
-  //判断target是否在容器中
+  //判断target是否在容器内
   const isFocusedInTrap = target && trapContainer.contains(target)
 
-  //触发focus-in
-  if (isFocusedInTrap) {
-    emit('focus-in', e)
+  //如果未捕获,设置
+  if (!props.trapped) {
+    //判断上一个捕获的元素是否在容器内
+    const isPrevFocusedInTrap =
+      relatedTarget && trapContainer.contains(relatedTarget)
+    //如果不在容器内,设置上一个捕获的元素为relatedTarget
+    if (!isPrevFocusedInTrap) {
+      lastFocusBeforeTrapped = relatedTarget
+    }
   }
 
-  //如果已暂停，return
+  if (isFocusedInTrap) emit('focusin', e)
+
   if (focusLayer.paused) return
 
-  //如果已捕获
+  //聚焦最后捕获的元素
   if (props.trapped) {
     if (isFocusedInTrap) {
-      //保存最后依次点击的目标
       lastFocusAfterTrapped = target
     } else {
       tryFocus(lastFocusAfterTrapped, true)
@@ -212,87 +176,86 @@ const onFocusIn = (e: Event) => {
   }
 }
 
-//失焦事件
+//失焦
 const onFocusOut = (e: Event) => {
-  //如果已经暂停或者没有捕获容器,return
   const trapContainer = unref(forwardRef)
   if (focusLayer.paused || !trapContainer) return
 
-  //如果是捕获阶段
   if (props.trapped) {
     const relatedTarget = (e as FocusEvent).relatedTarget as HTMLElement | null
-    //如果存在辅助目标,且辅助目标不属于trapContainer(当点击的节点不可聚焦时辅助目标为null)
-    if (relatedTarget && !trapContainer.contains(relatedTarget)) {
+    if (!isNil(relatedTarget) && !trapContainer.contains(relatedTarget)) {
       setTimeout(() => {
         if (!focusLayer.paused && props.trapped) {
-          //聚焦进入捕获后最后focus的元素
-          tryFocus(lastFocusAfterTrapped, true)
+          //创建focusout阻止事件
+          const focusoutPreventedEvent = createFocusOutPreventedEvent({
+            focusReason: focusReason.value,
+          })
+          //触发focusoutPreventedEvent
+          emit('focusout-prevented', focusoutPreventedEvent)
+          //如果没有默认阻止,尝试聚焦最后捕获的聚焦元素
+          if (!focusoutPreventedEvent.defaultPrevented) {
+            tryFocus(lastFocusAfterTrapped, true)
+          }
         }
       }, 0)
     }
   } else {
     const target = e.target as HTMLElement | null
     const isFocusedInTrap = target && trapContainer.contains(target)
-    if (!isFocusedInTrap) emit('focus-out', e)
+    if (!isFocusedInTrap) emit('focusout', e)
   }
 }
 
 //开始捕获
-async function startTrap() {
-  //等待forwardRef赋值完成
+const startTrap = async () => {
   await nextTick()
-
-  //获取捕获容器
   const trapContainer = unref(forwardRef)
-
-  //如果有捕获容器
+  //如果捕获容器存在
   if (trapContainer) {
     //入栈
     focusableStack.push(focusLayer)
+    //获取上一个聚焦的元素
+    const prevFocusedElement = trapContainer.contains(document.activeElement)
+      ? lastFocusBeforeTrapped
+      : document.activeElement
 
-    const prevFocusedElement = document.activeElement
-
-    //获取进入容器前的activeElement
+    //设置捕获前的最后一个元素
     lastFocusBeforeTrapped = prevFocusedElement as HTMLElement | null
-
-    //判断当前激活的元素是否在容器内
+    //判断上一个聚焦的元素
     const isPrevFocusContained = trapContainer.contains(prevFocusedElement)
-
+    //如果不在
     if (!isPrevFocusContained) {
-      //自定义focus事件
+      //创建event
       const focusEvent = new Event(
         FOCUS_AFTER_TRAPPED,
         FOCUS_AFTER_TRAPPED_OPTS
       )
-
-      //为自定义的聚焦后事件添加监听
       trapContainer.addEventListener(FOCUS_AFTER_TRAPPED, trapOnFocus)
 
-      //触发自定义的聚焦后事件
+      //触发focusEvent
       trapContainer.dispatchEvent(focusEvent)
 
-      //如果focusEvent未被阻止
+      //如果没有默认阻止
       if (!focusEvent.defaultPrevented) {
         nextTick(() => {
+          //获取focusStartEl
           let focusStartEl = props.focusStartEl
 
-          //如果focusStartEl不是string类型,尝试聚焦,如果无法聚焦设置为first
+          //如果不是string,尝试聚焦focusStartEl,设置focusStartEl为first
           if (!isString(focusStartEl)) {
             tryFocus(focusStartEl)
             if (document.activeElement !== focusStartEl) {
               focusStartEl = 'first'
             }
           }
-
-          //如果focusStartEl是first
+          //聚焦第一个可聚焦的元素
           if (focusStartEl === 'first') {
             focusFirstDescendant(
               obtainAllFocusableElements(trapContainer),
               true
             )
           }
-
-          //如果document.activeElement没变化或者focusStartEl === "container",则tryFocus当前容器
+          //聚焦当前容器
           if (
             document.activeElement === prevFocusedElement ||
             focusStartEl === 'container'
@@ -306,24 +269,29 @@ async function startTrap() {
 }
 
 //停止捕获
-function stopTrap() {
+const stopTrap = () => {
+  //获取容器
   const trapContainer = unref(forwardRef)
 
   if (trapContainer) {
+    //移除监听
     trapContainer.removeEventListener(FOCUS_AFTER_TRAPPED, trapOnFocus)
 
-    const releasedEvent = new Event(
-      FOCUS_AFTER_RELEASED,
-      FOCUS_AFTER_TRAPPED_OPTS
-    )
-
+    //创建releasedEvent监听事件
+    const releasedEvent = new CustomEvent(FOCUS_AFTER_RELEASED, {
+      ...FOCUS_AFTER_TRAPPED_OPTS,
+      detail: {
+        focusReason: focusReason.value,
+      },
+    })
     trapContainer.addEventListener(FOCUS_AFTER_RELEASED, releaseOnFocus)
-
+    //触发releasedEvent事件
     trapContainer.dispatchEvent(releasedEvent)
-
-    /* 如果focusEvent未被阻止,判断lastFocusBeforeTrapped是否存在
-    如果存在尝试聚焦lastFocusBeforeTrapped，否则尝试聚焦body */
-    if (!releasedEvent.defaultPrevented) {
+    //如果没有默认阻止,且来自键盘或者非用户引起,尝试聚焦捕获前的最后后一个元素
+    if (
+      !releasedEvent.defaultPrevented &&
+      (focusReason.value == 'keyboard' || !isFocusCausedByUserEvent())
+    ) {
       tryFocus(lastFocusBeforeTrapped ?? document.body, true)
     }
 
@@ -340,7 +308,6 @@ onMounted(() => {
     startTrap()
   }
 
-  //监听trapped,调用startTrap()或者stopTrap()
   watch(
     () => props.trapped,
     (trapped) => {
@@ -353,10 +320,39 @@ onMounted(() => {
   )
 })
 
-//卸载阶段
 onBeforeUnmount(() => {
   if (props.trapped) {
     stopTrap()
+  }
+})
+
+provide(FOCUS_TRAP_INJECTION_KEY, {
+  focusTrapRef: forwardRef,
+  onKeydown,
+})
+
+//监听focusTrapEl修改forwardRef
+watch(
+  () => props.focusTrapEl,
+  (focusTrapEl) => {
+    if (focusTrapEl) {
+      forwardRef.value = focusTrapEl
+    }
+  },
+  { immediate: true }
+)
+
+//监听forwardRef,添加监听事件
+watch([forwardRef], ([forwardRef], [oldForwardRef]) => {
+  if (forwardRef) {
+    forwardRef.addEventListener('keydown', onKeydown)
+    forwardRef.addEventListener('focusin', onFocusIn)
+    forwardRef.addEventListener('focusout', onFocusOut)
+  }
+  if (oldForwardRef) {
+    oldForwardRef.removeEventListener('keydown', onKeydown)
+    oldForwardRef.removeEventListener('focusin', onFocusIn)
+    oldForwardRef.removeEventListener('focusout', onFocusOut)
   }
 })
 </script>

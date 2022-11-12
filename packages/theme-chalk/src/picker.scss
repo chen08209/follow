@@ -1,0 +1,137 @@
+@use 'sass:map';
+@use 'mixins/mixins' as *;
+@use 'mixins/setVar' as *;
+@use 'mixins/function' as *;
+@use 'mixins/config' as *;
+@use 'common/transition' as *;
+@use 'map' as *;
+
+@include b(picker) {
+  @include e(popper) {
+    @include set-css-var-type('datepicker', 'border-color', $datepicker);
+    @include picker-popper(
+      getCssVar('bg-color', 'overlay'),
+      1px solid getCssVar('datepicker', 'border-color'),
+      getCssVar('box-shadow', 'light')
+    );
+  }
+}
+
+@include b(picker-editor) {
+  @include set-component-css-var('date-editor', $date-editor);
+  @include set-component-css-var('input', $input);
+  display: flex;
+  justify-content: flex-start;
+  color: getCssVar(text-color-regular);
+
+  .#{$namespace}-icon {
+    height: inherit;
+    position: relative;
+    font-size: 14px;
+    color: getCssVar('text-color', 'placeholder');
+    svg {
+      vertical-align: middle;
+    }
+  }
+  .mode-icon {
+    margin-right: 14px;
+  }
+  .clear-icon {
+    margin-left: 14px;
+  }
+
+  .separator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-family: Arial;
+    padding: 0 5px;
+    margin: 0;
+    font-size: 14px;
+    width: 20px;
+    box-sizing: border-box;
+    word-break: keep-all;
+    color: getCssVar('text-color', 'primary');
+  }
+  input {
+    appearance: none;
+    border: none;
+    outline: none;
+    display: inline-block;
+    height: #{map.get($input-height, 'default') - 2};
+    line-height: #{map.get($input-height, 'default') - 2};
+    margin: 0;
+    padding: 0;
+    width: calc(220px - 22px - 56px);
+    font-size: getCssVar('font-size', 'base');
+    color: getCssVar('text-color', 'regular');
+    background-color: transparent;
+    &::placeholder {
+      color: getCssVar('text-color', 'placeholder');
+    }
+  }
+
+  &.#{$namespace}-input__wrapper {
+    width: getCssVar('date-editor-width');
+    height: var(#{getCssVarName('input-height')}, getCssVar('component-size'));
+  }
+
+  @include when(range) {
+    @include css-var-from-global(
+      'date-editor-width',
+      'date-editor-range-width'
+    );
+    .#{$namespace}-icon {
+      margin: 0;
+    }
+    input {
+      width: 100px;
+      text-align: center;
+    }
+  }
+
+  &.#{$namespace}-input__wrapper {
+    @include inset-input-border(
+      var(
+        #{getCssVarName('input-border-color')},
+        map.get($input, 'border-color')
+      )
+    );
+    &:hover {
+      @include inset-input-border(#{getCssVar('input', 'hover-border-color')});
+    }
+  }
+
+  @include when(active) {
+    @include inset-input-border(#{getCssVar('input', 'focus-border-color')});
+    &:hover {
+      @include inset-input-border(#{getCssVar('input', 'focus-border-color')});
+    }
+  }
+
+  @each $size in (large, small) {
+    @include m($size) {
+      line-height: getCssVar('component-size', $size);
+      input {
+        height: #{map.get($input-height, $size) - 2};
+        line-height: #{map.get($input-height, $size) - 2};
+      }
+      &.#{$namespace}-input__wrapper {
+        height: getCssVar('component-size', $size);
+      }
+    }
+  }
+
+  @include when(disabled) {
+    background-color: map.get($input-disabled, 'fill');
+    border-color: map.get($input-disabled, 'border');
+    color: map.get($input-disabled, 'text-color');
+    cursor: not-allowed;
+
+    &:hover,
+    &:focus {
+      border-color: map.get($input-disabled, 'border');
+    }
+  }
+}

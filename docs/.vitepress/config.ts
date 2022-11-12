@@ -73,12 +73,16 @@ const sidebar = {
       text: '组合组件',
       items: [
         {
-          text: '日期选择器',
-          link: '/components/date',
-        },
-        {
           text: '时间选择器',
           link: '/components/time',
+        },
+        {
+          text: '时间选择器2',
+          link: '/components/time2',
+        },
+        {
+          text: '日期选择器',
+          link: '/components/date',
         },
         {
           text: '日期时间选择器',

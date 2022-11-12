@@ -1,10 +1,9 @@
-import { buildProps, definePropType } from '@follow-ui/utils'
-
-import type {
+import {
   GetDisabledHours,
   GetDisabledMinutes,
   GetDisabledSeconds,
-} from './picker'
+} from '@follow-ui/tokens'
+import { buildProps, definePropType } from '@follow-ui/utils'
 import type { ExtractPropTypes } from 'vue'
 
 export const disabledTimeListsProps = buildProps({

@@ -2,7 +2,6 @@ import { computed, isRef, ref, unref } from 'vue'
 import { get } from 'lodash-unified'
 import { zh } from '@follow-ui/locale'
 import { useGlobalConfig } from '../use-global-config'
-import type { MaybeRef } from '@vueuse/core'
 import type { Ref } from 'vue'
 import type { Language } from '@follow-ui/locale'
 
@@ -15,9 +14,9 @@ export type LocaleContext = {
 }
 
 export const buildTranslator =
-  (locale: MaybeRef<Language>): Translator =>
+  (locale: Language | Ref<Language>): Translator =>
   (path, option) =>
-    translate(path, option, unref(locale))
+    translate(path, option, unref(locale) as Language)
 
 export const translate = (
   path: string,
@@ -30,7 +29,7 @@ export const translate = (
   )
 
 export const buildLocaleContext = (
-  locale: MaybeRef<Language>
+  locale: Language | Ref<Language>
 ): LocaleContext => {
   const lang = computed(() => unref(locale).name)
   const localeRef = isRef(locale) ? locale : ref(locale)

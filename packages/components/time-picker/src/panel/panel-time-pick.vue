@@ -5,7 +5,6 @@
         <time-spinner
           ref="spinner"
           :role="datetimeRole || 'start'"
-          :arrow-control="arrowControl"
           :show-seconds="showSeconds"
           :am-pm-mode="amPmMode"
           :spinner-date="(parsedValue as any)"
@@ -18,20 +17,21 @@
         />
       </div>
       <div :class="ns.be('panel', 'footer')">
-        <button
-          type="button"
+        <fl-button
+          link
           :class="[ns.be('panel', 'btn'), 'cancel']"
           @click="handleCancel"
         >
           {{ t('fl.datepicker.cancel') }}
-        </button>
-        <button
-          type="button"
+        </fl-button>
+        <fl-button
+          link
+          type="primary"
           :class="[ns.be('panel', 'btn'), 'confirm']"
           @click="handleConfirm()"
         >
           {{ t('fl.datepicker.confirm') }}
-        </button>
+        </fl-button>
       </div>
     </div>
   </transition>
@@ -43,9 +43,9 @@ import dayjs from 'dayjs'
 import { EVENT_CODE } from '@follow-ui/constants'
 import { useLocale, useNamespace } from '@follow-ui/hooks'
 import { isUndefined } from '@follow-ui/utils'
-
 import { PICKER_BASE } from '@follow-ui/tokens'
 import TimeSpinner from '../basic/basic-time-spinner.vue'
+import { FlButton } from '../../../button'
 
 import {
   buildAvailableTimeSlotGetter,
@@ -60,13 +60,8 @@ const emit = defineEmits(['pick', 'select-range', 'set-picker-option'])
 
 //注入参数
 const pickerBase = inject(PICKER_BASE) as any
-const {
-  arrowControl,
-  disabledHours,
-  disabledMinutes,
-  disabledSeconds,
-  defaultValue,
-} = pickerBase.props
+const { disabledHours, disabledMinutes, disabledSeconds, defaultValue } =
+  pickerBase.props
 
 //获取AvailableTimeGetter
 const { getAvailableHours, getAvailableMinutes, getAvailableSeconds } =

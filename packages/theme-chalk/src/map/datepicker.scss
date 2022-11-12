@@ -23,6 +23,7 @@ $date-editor: () !default;
 $date-editor: map.merge(
   (
     'width': 220px,
+    'range-width': 270px,
     'monthrange-width': 300px,
     'daterange-width': 350px,
     'datetimerange-width': 400px,

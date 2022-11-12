@@ -1,98 +1,47 @@
 <template>
   <div :class="[ns.b('spinner'), { 'has-seconds': showSeconds }]">
-    <template v-if="!arrowControl">
-      <fl-scrollbar
-        v-for="item in spinnerItems"
-        :key="item"
-        :ref="(scrollbar: unknown) => setRef(scrollbar as any, item)"
-        :class="ns.be('spinner', 'wrapper')"
-        wrap-style="max-height: inherit;"
-        :view-class="ns.be('spinner', 'list')"
-        noresize
-        tag="ul"
-        @mouseenter="emitSelectRange(item)"
-        @mousemove="adjustCurrentSpinner(item)"
+    <fl-scrollbar
+      v-for="item in spinnerItems"
+      :key="item"
+      :ref="(scrollbar: unknown) => setRef(scrollbar as any, item)"
+      :class="ns.be('spinner', 'wrapper')"
+      wrap-style="max-height: inherit;"
+      :view-class="ns.be('spinner', 'list')"
+      noresize
+      tag="ul"
+      @mouseenter="emitSelectRange(item)"
+      @mousemove="adjustCurrentSpinner(item)"
+    >
+      <li
+        v-for="(disabled, key) in timeList[item]"
+        :key="key"
+        :class="[
+          ns.be('spinner', 'item'),
+          ns.is('active', key === timePartials[item]),
+          ns.is('disabled', disabled),
+        ]"
+        @click="handleClick(item, { value: key, disabled })"
       >
-        <li
-          v-for="(disabled, key) in timeList[item]"
-          :key="key"
-          :class="[
-            ns.be('spinner', 'item'),
-            ns.is('active', key === timePartials[item]),
-            ns.is('disabled', disabled),
-          ]"
-          @click="handleClick(item, { value: key, disabled })"
-        >
-          <!-- 添0截取两位数 -->
-          <template v-if="item === 'hours'">
-            {{ ('0' + (amPmMode ? key % 12 || 12 : key)).slice(-2)
-            }}{{ getAmPmFlag(key) }}
-          </template>
-          <template v-else>
-            {{ ('0' + key).slice(-2) }}
-          </template>
-        </li>
-      </fl-scrollbar>
-    </template>
-    <template v-if="arrowControl">
-      <div
-        v-for="item in spinnerItems"
-        :key="item"
-        :class="[ns.be('spinner', 'wrapper'), ns.is('arrow')]"
-        @mouseenter="emitSelectRange(item)"
-      >
-        <fl-icon
-          v-repeat-click="onDecrement"
-          :class="['arrow-up', ns.be('spinner', 'arrow')]"
-        >
-          <arrow-up />
-        </fl-icon>
-        <fl-icon
-          v-repeat-click="onIncrement"
-          :class="['arrow-down', ns.be('spinner', 'arrow')]"
-        >
-          <arrow-down />
-        </fl-icon>
-        <ul :class="ns.be('spinner', 'list')">
-          <li
-            v-for="(time, key) in arrowControlTimeList[item]"
-            :key="key"
-            :class="[
-              ns.be('spinner', 'item'),
-              ns.is('active', time === timePartials[item]),
-              ns.is('disabled', timeList[item][time!]),
-            ]"
-          >
-            <template v-if="typeof time === 'number'">
-              <template v-if="item === 'hours'">
-                {{ ('0' + (amPmMode ? time % 12 || 12 : time)).slice(-2)
-                }}{{ getAmPmFlag(time) }}
-              </template>
-              <template v-else>
-                {{ ('0' + time).slice(-2) }}
-              </template>
-            </template>
-          </li>
-        </ul>
-      </div>
-    </template>
+        <!-- 添0截取两位数 -->
+        <template v-if="item === 'hours'">
+          {{ ('0' + (amPmMode ? key % 12 || 12 : key)).slice(-2)
+          }}{{ getAmPmFlag(key) }}
+        </template>
+        <template v-else>
+          {{ ('0' + key).slice(-2) }}
+        </template>
+      </li>
+    </fl-scrollbar>
   </div>
 </template>
 <script lang="ts" setup>
 import { computed, nextTick, onMounted, ref, unref, watch } from 'vue'
 import { debounce } from 'lodash-unified'
 import { useNamespace } from '@follow-ui/hooks'
-import { vRepeatClick } from '@follow-ui/directives'
-import { ArrowDown, ArrowUp } from '@element-plus/icons-vue'
-import { FlIcon } from '../../../icon'
+import { timeUnits } from '@follow-ui/constants'
 import { FlScrollbar } from '../../../scrollbar'
-import {
-  basicTimeSpinnerProps,
-  buildTimeList,
-  getTimeLists,
-  timeUnits,
-} from '../ts'
-import type { TimeList, TimeUnit } from '../ts'
+import { basicTimeSpinnerProps, getTimeLists } from '../ts'
+import type { TimeUnit } from '@follow-ui/constants'
 import type { Ref } from 'vue'
 import type { ScrollbarInstance } from '../../../scrollbar'
 
@@ -149,16 +98,6 @@ const timeList = computed(() => {
   }
 })
 
-//箭头控制时间列表
-const arrowControlTimeList = computed<Record<TimeUnit, TimeList>>(() => {
-  const { hours, minutes, seconds } = unref(timePartials)
-  return {
-    hours: buildTimeList(hours, 23),
-    minutes: buildTimeList(minutes, 59),
-    seconds: buildTimeList(seconds, 59),
-  }
-})
-
 //防抖动重置ScrollTop
 const debouncedResetScroll = debounce((type) => {
   //设置滚动状态
@@ -211,8 +150,6 @@ const getScrollbarElement = (el: HTMLElement) =>
   el.querySelector(`.${ns.namespace.value}-scrollbar__wrap`) as HTMLElement
 //调整scrollTop以对应value
 const adjustSpinner = (type: TimeUnit, value: number) => {
-  //如果使用箭头控制,return
-  if (props.arrowControl) return
   //获取滚动面板
   const scrollbar = unref(listRefsMap[type])
   if (scrollbar && scrollbar.$el) {
@@ -229,15 +166,6 @@ const typeItemHeight = (type: TimeUnit): number => {
   const scrollbar = unref(listRefsMap[type])
   //返回对应li的offsetHeight
   return scrollbar?.$el.querySelector('li').offsetHeight || 0
-}
-
-//加
-const onIncrement = () => {
-  scrollDown(1)
-}
-//减
-const onDecrement = () => {
-  scrollDown(-1)
 }
 
 //滚动条上下时间
@@ -323,12 +251,18 @@ const handleScroll = (type: TimeUnit) => {
   debouncedResetScroll(type)
   const value = Math.min(
     Math.round(
-      getScrollbarElement(unref(listRefsMap[type])!.$el).scrollTop /
+      (getScrollbarElement(unref(listRefsMap[type])!.$el).scrollTop -
+        (scrollBarHeight(type) * 0.5 - 10) / typeItemHeight(type) +
+        3) /
         typeItemHeight(type)
     ),
     type === 'hours' ? 23 : 59
   )
   emitChange(type, value)
+}
+
+const scrollBarHeight = (type: TimeUnit) => {
+  return unref(listRefsMap[type])!.$el.offsetHeight
 }
 //绑定滚动事件
 const bindScrollEvent = () => {
@@ -351,8 +285,7 @@ const bindScrollEvent = () => {
 
 onMounted(() => {
   nextTick(() => {
-    //如果不是用箭头控制,绑定滚动事件
-    !props.arrowControl && bindScrollEvent()
+    bindScrollEvent()
     //同步value和滚动条
     adjustSpinners()
     //如果当前角色为start,设置选中hours

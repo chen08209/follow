@@ -5,26 +5,12 @@ import { disabledTimeListsProps } from './shared'
 
 import type { Component, ExtractPropTypes } from 'vue'
 import type { Options } from '@popperjs/core'
-import type { Dayjs } from 'dayjs'
-
-export type SingleOrRange<T> = T | [T, T]
-export type DateModelType = number | string | Date
-export type ModelValueType = SingleOrRange<DateModelType>
-export type DayOrDays = SingleOrRange<Dayjs>
-export type DateOrDates = SingleOrRange<Date>
-export type Input = SingleOrRange<string | null>
-export type GetDisabledHours = (role: string, comparingDate?: Dayjs) => number[]
-export type GetDisabledMinutes = (
-  hour: number,
-  role: string,
-  comparingDate?: Dayjs
-) => number[]
-export type GetDisabledSeconds = (
-  hour: number,
-  minute: number,
-  role: string,
-  comparingDate?: Dayjs
-) => number[]
+import {
+  DayOrDays,
+  Input,
+  ModelValueType,
+  SingleOrRange,
+} from '@follow-ui/tokens'
 
 export const pickerProps = buildProps({
   id: {
@@ -108,10 +94,6 @@ export const pickerProps = buildProps({
   shortcuts: {
     type: Array,
     default: () => [],
-  },
-  arrowControl: {
-    type: Boolean,
-    default: false,
   },
   label: {
     type: String,

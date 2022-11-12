@@ -1,6 +1,5 @@
 <template>
   <fl-popper ref="popperRef" :role="role">
-    <!--触发元素 -->
     <fl-tooltip-trigger
       :disabled="disabled"
       :trigger="trigger"
@@ -11,7 +10,6 @@
       <slot v-if="$slots.default" />
     </fl-tooltip-trigger>
 
-    <!--popper内容 -->
     <fl-tooltip-content
       ref="contentRef"
       :append-to="appendTo"
@@ -61,7 +59,7 @@ import {
   watch,
 } from 'vue'
 import { useDelayedToggle, useId, usePopperContainer } from '@follow-ui/hooks'
-import { debugWarn, isBoolean, isUndefined } from '@follow-ui/utils'
+import { isBoolean } from '@follow-ui/utils'
 import { TOOLTIP_INJECTION_KEY } from '@follow-ui/tokens'
 import {
   FlPopper,
@@ -107,23 +105,11 @@ usePopperContainer()
 
 //延迟弹出
 const compatShowAfter = computed(() => {
-  if (!isUndefined(props.openDelay)) {
-    debugWarn(
-      'ElTooltip',
-      'open-delay is about to be deprecated in the next major version, please use `show-after` instead'
-    )
-  }
   return props.openDelay || (props.showAfter as number)
 })
 
 //是否显示箭头
 const compatShowArrow = computed(() => {
-  if (!isUndefined(props.visibleArrow)) {
-    debugWarn(
-      'ElTooltip',
-      '`visible-arrow` is about to be deprecated in the next major version, please use `show-arrow` instead'
-    )
-  }
   return isBoolean(props.visibleArrow) ? props.visibleArrow : props.showArrow
 })
 
@@ -163,7 +149,7 @@ const { onOpen, onClose } = useDelayedToggle({
 
 //是否通过visible控制popper
 const controlled = computed(
-  () => isBoolean(props.visible) && !hasUpdateHandler.value
+  () => !hasUpdateHandler.value
 )
 
 //传递给子孙组件

@@ -1,9 +1,9 @@
-import type { Dayjs } from 'dayjs'
-import type {
+import {
   GetDisabledHoursState,
   GetDisabledMinutesState,
   GetDisabledSecondsState,
-} from '../types'
+} from '@follow-ui/tokens'
+import type { Dayjs } from 'dayjs'
 
 type UseTimePanelProps = {
   getAvailableHours: GetDisabledHoursState
@@ -67,7 +67,8 @@ export const useTimePanel = ({
           }
         }
         /**
-         * 如果availableTimeSlots的长度大于0,且date对应type的数值不存在其中,执行后续语句
+         * 如果availableTimeSlots的长度大于0,且date对应type的数值无效
+         * 则设置result为有效数组的第一个数或者最后一个数
          */
         if (
           availableTimeSlots?.length &&

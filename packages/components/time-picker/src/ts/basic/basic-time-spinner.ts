@@ -17,8 +17,6 @@ export const basicTimeSpinnerProps = buildProps({
     type: Boolean,
     default: true,
   },
-  //是否使用箭头控制
-  arrowControl: Boolean,
   amPmMode: {
     // 'a': am/pm; 'A': AM/PM
     type: definePropType<'a' | 'A' | ''>(String),

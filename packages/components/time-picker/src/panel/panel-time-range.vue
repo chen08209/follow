@@ -12,7 +12,6 @@
           :class="[
             nsTime.be('range-picker', 'body'),
             nsTime.be('panel', 'content'),
-            nsTime.is('arrow', arrowControl),
             { 'has-seconds': showSeconds },
           ]"
         >
@@ -21,7 +20,6 @@
             role="start"
             :show-seconds="showSeconds"
             :am-pm-mode="amPmMode"
-            :arrow-control="arrowControl"
             :spinner-date="startTime"
             :disabled-hours="disabledHoursForRange"
             :disabled-minutes="disabledMinutesForRange"
@@ -40,7 +38,6 @@
           :class="[
             nsTime.be('range-picker', 'body'),
             nsTime.be('panel', 'content'),
-            nsTime.is('arrow', arrowControl),
             { 'has-seconds': showSeconds },
           ]"
         >
@@ -49,7 +46,6 @@
             role="end"
             :show-seconds="showSeconds"
             :am-pm-mode="amPmMode"
-            :arrow-control="arrowControl"
             :spinner-date="endTime"
             :disabled-hours="disabledHoursForRange"
             :disabled-minutes="disabledMinutesForRange"
@@ -62,21 +58,22 @@
       </div>
     </div>
     <div :class="nsTime.be('panel', 'footer')">
-      <button
-        type="button"
+      <fl-button
+        link
         :class="[nsTime.be('panel', 'btn'), 'cancel']"
         @click="handleCancel()"
       >
         {{ t('fl.datepicker.cancel') }}
-      </button>
-      <button
-        type="button"
+      </fl-button>
+      <fl-button
+        link
+        type="primary"
         :class="[nsTime.be('panel', 'btn'), 'confirm']"
         :disabled="btnConfirmDisabled"
         @click="handleConfirm()"
       >
         {{ t('fl.datepicker.confirm') }}
-      </button>
+      </fl-button>
     </div>
   </div>
 </template>
@@ -118,13 +115,8 @@ const { t, lang } = useLocale()
 const nsTime = useNamespace('time')
 const nsPicker = useNamespace('picker')
 const pickerBase = inject(PICKER_BASE) as any
-const {
-  arrowControl,
-  disabledHours,
-  disabledMinutes,
-  disabledSeconds,
-  defaultValue,
-} = pickerBase.props
+const { disabledHours, disabledMinutes, disabledSeconds, defaultValue } =
+  pickerBase.props
 
 const startTime = computed(() => props.parsedValue![0])
 const endTime = computed(() => props.parsedValue![1])
@@ -266,7 +258,6 @@ const disabledSecondsForRange = (
     : makeSelectRange(0, compareSecond - 1)
   return union(defaultDisable, nextDisable)
 }
-
 const getRangeAvailableTime = ([start, end]: Array<Dayjs>) => {
   return [
     getAvailableTime(start, 'start', true, end),

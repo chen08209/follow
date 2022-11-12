@@ -61,23 +61,19 @@ const onMouseleave = composeEventHandlers(
 const onClick = composeEventHandlers(
   stopWhenControlledOrDisabled,
   whenTrigger(trigger, 'click', (e) => {
-    // distinguish left click
     if ((e as MouseEvent).button === 0) {
       onToggle(e)
     }
   })
 )
-
 const onFocus = composeEventHandlers(
   stopWhenControlledOrDisabled,
   whenTrigger(trigger, 'focus', onOpen)
 )
-
 const onBlur = composeEventHandlers(
   stopWhenControlledOrDisabled,
   whenTrigger(trigger, 'focus', onClose)
 )
-
 const onContextMenu = composeEventHandlers(
   stopWhenControlledOrDisabled,
   whenTrigger(trigger, 'contextmenu', (e: Event) => {
@@ -85,7 +81,6 @@ const onContextMenu = composeEventHandlers(
     onToggle(e)
   })
 )
-
 const onKeydown = composeEventHandlers(
   stopWhenControlledOrDisabled,
   (e: KeyboardEvent) => {

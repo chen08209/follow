@@ -12,12 +12,11 @@ import { useNamespace } from '@follow-ui/hooks'
 import { PICKER_POPPER_OPTIONS, ROOT_PICKER_INJECTION_KEY } from '@follow-ui/tokens'
 import {
   CommonPicker,
-  DEFAULT_FORMATS_DATE,
-  DEFAULT_FORMATS_DATEPICKER,
   pickerProps,
 } from '../../time-picker'
 import { datePickerProps } from './ts'
 import { getPanel } from './panel-utils'
+import { DEFAULT_FORMATS_DATE, DEFAULT_FORMATS_DATEPICKER } from '@follow-ui/constants'
 
 dayjs.extend(localeData)
 dayjs.extend(advancedFormat)

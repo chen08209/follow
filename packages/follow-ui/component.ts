@@ -18,6 +18,7 @@ import { FlTag } from '@follow-ui/components/tag'
 import { FlTooltip } from '@follow-ui/components/tooltip'
 import { FlDatePicker } from '@follow-ui/components/date-picker'
 import { FlTimePicker } from '@follow-ui/components/time-picker'
+import { FlTimePicker2 } from '@follow-ui/components/time-picker-v2'
 import { FlSwitch } from '@follow-ui/components/switch'
 import { FlForm, FlFormItem } from '@follow-ui/components/form'
 import { FlScrollbar } from '@follow-ui/components/scrollbar'
@@ -49,5 +50,6 @@ export default [
   FlSelect,
   FlSwitch,
   FlTimePicker,
+  FlTimePicker2,
   FlDatePicker,
 ] as unknown as Plugin[]

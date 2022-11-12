@@ -1,7 +1,6 @@
 <template>
   <fl-time-picker
     v-model="value"
-    placeholder="选择时间"
     :disabled-hours="disabledHours"
     :disabled-minutes="disabledMinutes"
     :disabled-seconds="disabledSeconds"

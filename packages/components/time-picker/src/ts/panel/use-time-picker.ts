@@ -1,17 +1,14 @@
 import { ref, watch } from 'vue'
 import { makeList } from '../utils'
-
-import type {
-  GetDisabledHours,
-  GetDisabledMinutes,
-  GetDisabledSeconds,
-} from '../picker'
 import type { Dayjs } from 'dayjs'
-import type {
+import {
+  GetDisabledHours,
   GetDisabledHoursState,
+  GetDisabledMinutes,
   GetDisabledMinutesState,
+  GetDisabledSeconds,
   GetDisabledSecondsState,
-} from '../types'
+} from '@follow-ui/tokens'
 
 /**
  * 过滤disabled项,返回有效数组
@@ -34,7 +31,7 @@ export const getTimeLists = (
   disabledMinutes?: GetDisabledMinutes,
   disabledSeconds?: GetDisabledSeconds
 ) => {
-  //获取小时数组
+  //获取小时数组,如果存在disabledHours执行disabledHours
   const getHoursList = (role: string, compare?: Dayjs) => {
     return makeList(24, disabledHours && (() => disabledHours?.(role, compare)))
   }

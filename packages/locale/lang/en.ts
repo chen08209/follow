@@ -8,6 +8,13 @@ export default {
       description:
         'current color is {color}. press enter to select a new color.',
     },
+    timepicker: {
+      placeholder: {
+        default: 'Arbitrary time',
+        start: 'Start time',
+        end: 'End time',
+      },
+    },
     datepicker: {
       now: 'Now',
       today: 'Today',

@@ -12,7 +12,6 @@
 </template>
 
 <script setup lang="ts">
-// @ts-nocheck
 import { computed, inject, onBeforeUnmount, onMounted, watch } from 'vue'
 import { isNil } from 'lodash-unified'
 import { POPPER_INJECTION_KEY } from '@follow-ui/tokens/popper'
@@ -21,6 +20,7 @@ import { unrefElement } from '@vueuse/core'
 import { isElement } from '@follow-ui/utils'
 import { FlOnlyChild } from '../../slot'
 import { popperTriggerProps } from './ts'
+import type { FlPopperInjectionContext } from '@follow-ui/tokens/popper'
 
 import type { WatchStopHandle } from 'vue'
 
@@ -31,7 +31,9 @@ defineOptions({
 
 const props = defineProps(popperTriggerProps)
 
-const { role, triggerRef } = inject(POPPER_INJECTION_KEY)
+const { role, triggerRef } = inject(
+  POPPER_INJECTION_KEY
+) as FlPopperInjectionContext
 
 //发送ref到OnlyChild中使用,用于triggerRef赋值
 useForwardRef(triggerRef)
@@ -97,7 +99,6 @@ onMounted(() => {
           'onContextmenu',
         ].forEach((eventName) => {
           const handler = props[eventName]
-
           if (handler) {
             //添加新的监听器
             ;(el as HTMLElement).addEventListener(
